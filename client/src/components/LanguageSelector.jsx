@@ -4,8 +4,8 @@ const LanguageSelector = () => {
   const { i18n } = useTranslation();
 
   const languages = [
-    { code: "tr", name: "TR", flag: "🇹🇷" },
-    { code: "en", name: "EN", flag: "🇺🇸" },
+    { code: "tr", name: "TR", flag: "fi fi-tr" },
+    { code: "en", name: "EN", flag: "fi fi-us" },
   ];
 
   const currentLanguage =
@@ -23,7 +23,7 @@ const LanguageSelector = () => {
       className="language-toggle"
       data-lang={i18n.language}
     >
-      <span className="flag-icon">{currentLanguage.flag}</span>
+      <span className={`flag-icon ${currentLanguage.flag}`}></span>
       <span className="lang-text">{currentLanguage.name}</span>
     </button>
   );
