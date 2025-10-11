@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "refresh": "Refresh",
+    "search": "Search by name, description or URL...",
+    "filter": "Filter",
+    "status": "Status",
+    "name": "Name",
+    "description": "Info",
+    "created": "Created",
+    "updated": "Updated"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "loginSuccess": "Login successful",
+    "loginError": "Login failed",
+    "invalidCredentials": "Invalid username or password"
+  },
+  "dashboard": {
+    "title": "Coolify Dashboard",
+    "subtitle": "Manage your applications, services, and databases",
+    "applications": "Applications",
+    "services": "Services",
+    "databases": "Databases",
+    "totalResources": "Total Resources",
+    "running": "Running",
+    "stopped": "Stopped",
+    "error": "Error",
+    "noResources": "not found",
+    "loadingResources": "Loading resources...",
+    "failedToLoad": "Failed to load resources"
+  },
+  "resourceCard": {
+    "status": "Status",
+    "domain": "Domain",
+    "internalUrl": "Internal URL",
+    "backup": "Backup",
+    "lastBackup": "Last Backup",
+    "noBackup": "No backup",
+    "viewLogs": "View Logs",
+    "restart": "Restart",
+    "stop": "Stop",
+    "start": "Start",
+    "visit": "Visit",
+    "internalAccess": "Internal Access",
+    "goToApp": "Go to App",
+    "applicationStatus": "Application Status",
+    "components": "Components",
+    "description": "Description",
+    "viewYaml": "View YAML",
+    "internalConnectionAddress": "Internal Connection Address",
+    "veryImportant": "Very Important",
+    "databasePassword": "Database Password",
+    "critical": "Critical",
+    "notConfigured": "Not Configured",
+    "warning": "WARNING",
+    "publicAccess": "Public Access",
+    "closed": "Closed",
+    "open": "Open",
+    "sslStatus": "SSL Status",
+    "passive": "Passive",
+    "active": "Active",
+    "resourceLimits": "Resource Limits",
+    "memoryLimit": "Memory Limit",
+    "swapLimit": "Swap Limit"
+  },
+  "sortOptions": {
+    "byName": "By Name",
+    "byStatus": "By Status",
+    "byCreatedAt": "Created Date",
+    "byUpdatedAt": "Updated Date"
+  },
+  "resourceTypes": {
+    "application": "Application",
+    "service": "Service",
+    "database": "Database"
+  },
+  "timeAgo": {
+    "hoursAgo": "hours ago",
+    "daysAgo": "days ago",
+    "minutesAgo": "minutes ago",
+    "justNow": "just now"
+  },
+  "modals": {
+    "redirecting": "You will be redirected to the page",
+    "redirectToNewTab": "You will be redirected to the following address in a new tab:",
+    "cancel": "Cancel",
+    "continue": "Continue"
+  },
+  "tooltips": {
+    "internalConnection": "You can use this address in your other services to connect to this database.",
+    "backupWarning": "It is recommended to configure backup to prevent data loss."
+  },
+  "status": {
+    "unlimited": "Unlimited"
+  },
+  "language": {
+    "select": "Select Language",
+    "turkish": "Türkçe",
+    "english": "English"
+  }
+}

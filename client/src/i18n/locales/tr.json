@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "success": "Başarılı",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "view": "Görüntüle",
+    "refresh": "Yenile",
+    "search": "İsim, açıklama veya URL ile ara...",
+    "filter": "Filtrele",
+    "status": "Durum",
+    "name": "İsim",
+    "description": "Bilgiler",
+    "created": "Oluşturulma",
+    "updated": "Güncelleme"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "logout": "Çıkış Yap",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "loginSuccess": "Giriş başarılı",
+    "loginError": "Giriş başarısız",
+    "invalidCredentials": "Geçersiz kullanıcı adı veya şifre"
+  },
+  "dashboard": {
+    "title": "Coolify Dashboard",
+    "subtitle": "Uygulamalarınızı, servislerinizi ve veritabanlarınızı yönetin",
+    "applications": "Uygulamalar",
+    "services": "Servisler",
+    "databases": "Veritabanları",
+    "totalResources": "Toplam Kaynak",
+    "running": "Çalışıyor",
+    "stopped": "Durduruldu",
+    "error": "Hata",
+    "noResources": "bulunamadı",
+    "loadingResources": "Kaynaklar yükleniyor...",
+    "failedToLoad": "Kaynaklar yüklenirken hata oluştu"
+  },
+  "resourceCard": {
+    "status": "Durum",
+    "domain": "Domain",
+    "internalUrl": "İç URL",
+    "backup": "Yedekleme",
+    "lastBackup": "Son Yedekleme",
+    "noBackup": "Yedekleme yok",
+    "viewLogs": "Logları Görüntüle",
+    "restart": "Yeniden Başlat",
+    "stop": "Durdur",
+    "start": "Başlat",
+    "visit": "Ziyaret Et",
+    "internalAccess": "İç Erişim",
+    "goToApp": "Uygulamaya Git",
+    "applicationStatus": "Uygulama Durumu",
+    "components": "Bileşenler",
+    "description": "Açıklama",
+    "viewYaml": "YAML Görüntüle",
+    "internalConnectionAddress": "Dahili Bağlantı Adresi",
+    "veryImportant": "Çok Önemli",
+    "databasePassword": "Veritabanı Şifresi",
+    "critical": "Kritik",
+    "notConfigured": "Yapılandırılmamış",
+    "warning": "UYARI",
+    "publicAccess": "Public Erişim",
+    "closed": "Kapalı",
+    "open": "Açık",
+    "sslStatus": "SSL Durumu",
+    "passive": "Pasif",
+    "active": "Aktif",
+    "resourceLimits": "Kaynak Limitleri",
+    "memoryLimit": "Bellek Limiti",
+    "swapLimit": "Swap Limiti"
+  },
+  "sortOptions": {
+    "byName": "İsme göre",
+    "byStatus": "Status'e göre",
+    "byCreatedAt": "Oluşturulma Tarihi",
+    "byUpdatedAt": "Güncelleme Tarihi"
+  },
+  "resourceTypes": {
+    "application": "Uygulama",
+    "service": "Servis",
+    "database": "Veritabanı"
+  },
+  "timeAgo": {
+    "hoursAgo": "saat önce",
+    "daysAgo": "gün önce",
+    "minutesAgo": "dakika önce",
+    "justNow": "az önce"
+  },
+  "modals": {
+    "redirecting": "Sayfaya Yönlendirileceksiniz",
+    "redirectToNewTab": "Aşağıdaki adrese yeni sekmede yönlendirileceksiniz:",
+    "cancel": "İptal",
+    "continue": "Devam Et"
+  },
+  "tooltips": {
+    "internalConnection": "Adresi diğer servislerinizde kullanarak bu veritabanına bağlanabilirsiniz.",
+    "backupWarning": "Veri kaybını önlemek için yedekleme yapılandırmanız önerilir."
+  },
+  "status": {
+    "unlimited": "Limitsiz"
+  },
+  "language": {
+    "select": "Dil Seçin",
+    "turkish": "Türkçe",
+    "english": "English"
+  }
+}

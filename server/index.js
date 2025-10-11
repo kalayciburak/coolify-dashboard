@@ -1,0 +1,44 @@
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import authRoutes from "./routes/auth.js";
+import { corsMiddleware } from "./middleware/cors.js";
+import { handleError } from "./utils/errorHandler.js";
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(corsMiddleware);
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "Server is running" });
+});
+
+app.get("/api/config", (req, res) => {
+  res.json({
+    coolifyBaseUrl: process.env.COOLIFY_BASE_URL || "",
+    coolifyToken: process.env.COOLIFY_TOKEN || "",
+  });
+});
+
+app.use(express.static(path.join(__dirname, "../dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
+
+app.use((err, req, res, _next) => {
+  handleError(err, res);
+});
+
+app.listen(PORT, () => {
+});
