@@ -106,7 +106,9 @@ const Dashboard = () => {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white text-lg">Kaynaklar yükleniyor...</p>
+          <p className="text-white text-lg">
+            {t("dashboard.loadingResources")}
+          </p>
         </div>
       </div>
     );
@@ -130,7 +132,7 @@ const Dashboard = () => {
               >
                 <ArrowRightStartOnRectangleIcon className="w-4 h-4 md:w-5 md:h-5" />
                 <span className="hidden md:inline">{t("auth.logout")}</span>
-                <span className="md:hidden">Çıkış</span>
+                <span className="md:hidden">{t("auth.logout")}</span>
               </button>
             </div>
           </div>
@@ -254,7 +256,11 @@ const Dashboard = () => {
                   setSortOrder(sortOrder === "asc" ? "desc" : "asc")
                 }
                 className="flex items-center px-3 md:px-4 py-2 md:py-1.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm hover:bg-white/10 active:bg-white/20 transition cursor-pointer touch-manipulation"
-                title={sortOrder === "asc" ? "Artan" : "Azalan"}
+                title={
+                  sortOrder === "asc"
+                    ? t("sortOptions.ascending")
+                    : t("sortOptions.descending")
+                }
               >
                 {sortOrder === "asc" ? (
                   <ArrowUpIcon className="w-4 h-4 md:w-5 md:h-5" />

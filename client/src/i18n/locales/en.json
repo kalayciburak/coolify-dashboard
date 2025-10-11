@@ -78,7 +78,9 @@
     "byName": "By Name",
     "byStatus": "By Status",
     "byCreatedAt": "Created Date",
-    "byUpdatedAt": "Updated Date"
+    "byUpdatedAt": "Updated Date",
+    "ascending": "Ascending",
+    "descending": "Descending"
   },
   "resourceTypes": {
     "application": "Application",

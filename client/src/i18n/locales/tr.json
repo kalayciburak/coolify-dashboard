@@ -78,7 +78,9 @@
     "byName": "İsme göre",
     "byStatus": "Status'e göre",
     "byCreatedAt": "Oluşturulma Tarihi",
-    "byUpdatedAt": "Güncelleme Tarihi"
+    "byUpdatedAt": "Güncelleme Tarihi",
+    "ascending": "Artan",
+    "descending": "Azalan"
   },
   "resourceTypes": {
     "application": "Uygulama",
