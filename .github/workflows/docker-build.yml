@@ -3,13 +3,11 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main
       - master
     tags:
       - "v*"
   pull_request:
     branches:
-      - main
       - master
 
 jobs:
@@ -49,8 +47,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=torukobyte/coolify-dashboard:buildcache
-          cache-to: type=registry,ref=torukobyte/coolify-dashboard:buildcache,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Update Docker Hub description
         if: github.event_name != 'pull_request'
