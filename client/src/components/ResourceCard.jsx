@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import {
   ServerIcon,
   CubeIcon,
@@ -21,7 +20,6 @@ import ConfirmUrlModal from "./modals/ConfirmUrlModal";
 import YamlModal from "./modals/YamlModal";
 
 const ResourceCard = ({ resource }) => {
-  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [showYaml, setShowYaml] = useState(false);
   const [confirmUrl, setConfirmUrl] = useState(null);

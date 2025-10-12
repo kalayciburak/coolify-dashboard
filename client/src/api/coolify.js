@@ -5,38 +5,18 @@ import {
   mapDatabase,
 } from "../services/resourceMapper";
 
-let runtimeConfig = null;
-
-const fetchRuntimeConfig = async () => {
-  if (runtimeConfig) return runtimeConfig;
-
-  try {
-    const response = await fetch("/api/config");
-    runtimeConfig = await response.json();
-    return runtimeConfig;
-  } catch (error) {
-    return {
-      coolifyBaseUrl: "",
-      coolifyToken: "",
-    };
-  }
-};
-
-const BASE_URL = "";
-const TOKEN = "";
-
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "/api/coolify",
   headers: {
-    Authorization: `Bearer ${TOKEN}`,
     "Content-Type": "application/json",
   },
 });
 
-api.interceptors.request.use(async (config) => {
-  const config_data = await fetchRuntimeConfig();
-  config.baseURL = config_data.coolifyBaseUrl + "/api/v1";
-  config.headers.Authorization = `Bearer ${config_data.coolifyToken}`;
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
@@ -60,16 +40,19 @@ export const fetchAllResources = async () => {
     ]
   );
 
+  const isDashboardResource = (resource) => {
+    const name = resource.name?.toLowerCase() || "";
+    return name.includes("coolify-dashboard") || name.includes("dashboard");
+  };
+
   const applications = appsResponse.data
-    .filter((app) => !app.name?.toLowerCase().includes("coolify-dashboard"))
+    .filter((app) => !isDashboardResource(app))
     .map(mapApplication);
   const services = servicesResponse.data
-    .filter(
-      (service) => !service.name?.toLowerCase().includes("coolify-dashboard")
-    )
+    .filter((service) => !isDashboardResource(service))
     .map(mapService);
   const databases = (databasesResponse.data || [])
-    .filter((db) => !db.name?.toLowerCase().includes("coolify-dashboard"))
+    .filter((db) => !isDashboardResource(db))
     .map(mapDatabase);
 
   return [...applications, ...services, ...databases];

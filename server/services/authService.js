@@ -10,7 +10,7 @@ class AuthService {
     }
 
     if (
-      username !== process.env.ADMIN_USERNAME ||
+      username.toLowerCase() !== process.env.ADMIN_USERNAME.toLowerCase() ||
       password !== process.env.ADMIN_PASSWORD
     ) {
       return {

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
+import coolifyRoutes from "./routes/coolify.js";
 import { corsMiddleware } from "./middleware/cors.js";
 import { handleError } from "./utils/errorHandler.js";
 
@@ -18,16 +19,10 @@ app.use(corsMiddleware);
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/coolify", coolifyRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });
-});
-
-app.get("/api/config", (req, res) => {
-  res.json({
-    coolifyBaseUrl: process.env.COOLIFY_BASE_URL || "",
-    coolifyToken: process.env.COOLIFY_TOKEN || "",
-  });
 });
 
 app.use(express.static(path.join(__dirname, "../dist")));
@@ -40,5 +35,4 @@ app.use((err, req, res, _next) => {
   handleError(err, res);
 });
 
-app.listen(PORT, () => {
-});
+app.listen(PORT, () => {});

@@ -1,5 +1,5 @@
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { customSyntaxTheme } from "../../styles/syntaxTheme";
 
 const YamlModal = ({ name, content, onClose }) => {
   return (
@@ -25,7 +25,7 @@ const YamlModal = ({ name, content, onClose }) => {
         <div className="flex-1 overflow-auto p-4">
           <SyntaxHighlighter
             language="yaml"
-            style={vscDarkPlus}
+            style={customSyntaxTheme}
             showLineNumbers={true}
             customStyle={{
               borderRadius: "0.5rem",
@@ -35,8 +35,8 @@ const YamlModal = ({ name, content, onClose }) => {
             }}
             codeTagProps={{
               style: {
-                fontFamily: '"Fira Code", monospace',
-                fontSize: "0.8rem",
+                fontFamily: '"JetBrains Mono", monospace',
+                fontSize: "0.875rem",
               },
             }}
           >

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { fetchAllResources } from "../api/coolify";
@@ -34,11 +34,7 @@ const Dashboard = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadResources(true);
-  }, []);
-
-  const loadResources = async (isInitialLoad = false) => {
+  const loadResources = useCallback(async (isInitialLoad = false) => {
     try {
       if (isInitialLoad) {
         setLoading(true);
@@ -55,12 +51,16 @@ const Dashboard = () => {
       });
       setResources(filteredData);
     } catch (err) {
-      setError(err.message || t("dashboard.failedToLoad"));
+      setError(err.message || "Failed to load resources");
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadResources(true);
+  }, [loadResources]);
 
   const handleLogout = () => {
     logout();
@@ -124,7 +124,7 @@ const Dashboard = () => {
               <span className="hidden md:inline">{t("dashboard.title")}</span>
               <span className="md:hidden">Dashboard</span>
             </h1>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4 md:gap-6">
               <LanguageSelector />
               <button
                 onClick={handleLogout}
@@ -142,7 +142,11 @@ const Dashboard = () => {
       <div className="container mx-auto px-3 md:px-4 py-4 md:py-8 flex-1">
         {error && (
           <div className="bg-red-500/10 border border-red-500/50 text-red-200 px-4 md:px-6 py-3 md:py-4 rounded-xl mb-4 md:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <span className="text-sm md:text-base">{error}</span>
+            <span className="text-sm md:text-base">
+              {error === "Failed to load resources"
+                ? t("dashboard.failedToLoad")
+                : error}
+            </span>
             <button
               onClick={() => loadResources(false)}
               className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 rounded-lg transition text-sm font-medium cursor-pointer touch-manipulation whitespace-nowrap"
