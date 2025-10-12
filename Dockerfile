@@ -1,4 +1,4 @@
-FROM node:20 AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 
 RUN npm install -g npm@latest
@@ -12,7 +12,7 @@ COPY client/ ./client/
 
 RUN npm run build -w client
 
-FROM node:20 AS backend-builder
+FROM node:20-alpine AS backend-builder
 WORKDIR /app
 
 RUN npm install -g npm@latest
@@ -23,7 +23,7 @@ COPY server/package*.json ./server/
 RUN npm ci --omit=dev
 COPY server/ ./server/
 
-FROM node:20-slim
+FROM node:20-alpine
 WORKDIR /app
 
 RUN npm install -g npm@latest
