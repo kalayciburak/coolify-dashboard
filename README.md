@@ -81,27 +81,27 @@ COOLIFY_TOKEN=your_coolify_api_token
 
 ### Login Screen
 
-![Login Screen](./docs/screenshots/en/1.png)
+![Login Screen](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/1.png)
 
 ### Applications Overview
 
-![Applications Overview](./docs/screenshots/en/2.png)
+![Applications Overview](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/2.png)
 
 ### Application Details
 
-![Application Details](./docs/screenshots/en/3.png)
+![Application Details](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/3.png)
 
 ### Services Overview
 
-![Services Overview](./docs/screenshots/en/4.png)
+![Services Overview](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/4.png)
 
 ### Database Configuration
 
-![Database Details](./docs/screenshots/en/5.png)
+![Database Details](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/5.png)
 
 ### Multi-language Support
 
-![Language Support](./docs/screenshots/en/6.png)
+![Language Support](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/6.png)
 
 ---
 

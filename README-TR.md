@@ -81,27 +81,27 @@ COOLIFY_TOKEN=coolify_api_token_iniz
 
 ### Giriş Ekranı
 
-![Giriş Ekranı](./docs/screenshots/tr/1.png)
+![Giriş Ekranı](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/1.png)
 
 ### Uygulamalar Genel Görünüm
 
-![Uygulamalar Genel Görünüm](./docs/screenshots/tr/2.png)
+![Uygulamalar Genel Görünüm](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/2.png)
 
 ### Uygulama Detayları
 
-![Uygulama Detayları](./docs/screenshots/tr/3.png)
+![Uygulama Detayları](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/3.png)
 
 ### Servis Detayları
 
-![Servis Detayları](./docs/screenshots/tr/4.png)
+![Servis Detayları](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/4.png)
 
 ### Veritabanı Yapılandırması
 
-![Veritabanı Detayları](./docs/screenshots/tr/5.png)
+![Veritabanı Detayları](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/5.png)
 
 ### Çok Dilli Destek
 
-![Çok Dilli Destek](./docs/screenshots/tr/6.png)
+![Çok Dilli Destek](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/6.png)
 
 ---
 
