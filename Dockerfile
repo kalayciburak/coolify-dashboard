@@ -1,6 +1,8 @@
 FROM node:20 AS frontend-builder
 WORKDIR /app
 
+RUN npm install -g npm@latest
+
 COPY package*.json ./
 COPY client/package*.json ./client/
 COPY server/package*.json ./server/
@@ -13,6 +15,8 @@ RUN npm run build -w client
 FROM node:20 AS backend-builder
 WORKDIR /app
 
+RUN npm install -g npm@latest
+
 COPY package*.json ./
 COPY server/package*.json ./server/
 
@@ -21,6 +25,8 @@ COPY server/ ./server/
 
 FROM node:20-slim
 WORKDIR /app
+
+RUN npm install -g npm@latest
 
 COPY --from=frontend-builder /app/client/dist ./dist
 
