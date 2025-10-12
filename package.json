@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Modern dashboard for managing Coolify applications, services, and databases",
+  "description": "A modern, production-ready dashboard for monitoring Coolify apps, services, and databases.",
   "author": "Burak Kalaycı",
   "license": "MIT",
   "repository": {
