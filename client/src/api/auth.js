@@ -17,6 +17,18 @@ authApi.interceptors.request.use((config) => {
   return config;
 });
 
+authApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const login = async (username, password) => {
   const response = await authApi.post("/login", { username, password });
   return response.data;
