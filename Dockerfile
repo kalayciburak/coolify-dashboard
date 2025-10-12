@@ -1,7 +1,8 @@
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 
-RUN npm install -g npm@latest
+RUN apk upgrade --no-cache && \
+    npm install -g npm@latest
 
 COPY package*.json ./
 COPY client/package*.json ./client/
@@ -15,7 +16,8 @@ RUN npm run build -w client
 FROM node:20-alpine AS backend-builder
 WORKDIR /app
 
-RUN npm install -g npm@latest
+RUN apk upgrade --no-cache && \
+    npm install -g npm@latest
 
 COPY package*.json ./
 COPY server/package*.json ./server/
@@ -26,7 +28,8 @@ COPY server/ ./server/
 FROM node:20-alpine
 WORKDIR /app
 
-RUN npm install -g npm@latest
+RUN apk upgrade --no-cache && \
+    npm install -g npm@latest
 
 COPY --from=frontend-builder /app/client/dist ./dist
 
