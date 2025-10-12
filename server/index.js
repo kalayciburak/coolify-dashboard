@@ -11,6 +11,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const NODE_ENV = process.env.NODE_ENV || "production";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,8 +22,12 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/coolify", coolifyRoutes);
 
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", message: "Server is running" });
+app.get("/healthz", (req, res) => {
+  res.json({
+    status: "ok",
+    message: "Server is running",
+    ...(NODE_ENV !== "production" && { environment: NODE_ENV }),
+  });
 });
 
 app.use(express.static(path.join(__dirname, "../dist")));
@@ -35,4 +40,9 @@ app.use((err, req, res, _next) => {
   handleError(err, res);
 });
 
-app.listen(PORT, () => {});
+app.listen(PORT, () => {
+  if (NODE_ENV !== "production") {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Environment: ${NODE_ENV}`);
+  }
+});
