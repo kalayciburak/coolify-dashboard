@@ -126,19 +126,17 @@ const ResourceDetails = ({ resource, onShowYaml }) => {
               <span className="text-sm font-semibold text-white">Ports</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {resource.type === "Database" && resource.internal_port && (
+              {resource.public_port && (
                 <p className="text-sm text-slate-300 font-mono bg-slate-800/50 px-3 py-2 rounded">
-                  <span className="text-purple-400">Internal:</span>{" "}
-                  <span className="text-purple-300">
-                    {resource.internal_port}
-                  </span>
+                  <span className="text-blue-400">Public:</span>{" "}
+                  <span className="text-blue-300">{resource.public_port}</span>
                 </p>
               )}
-              {resource.type === "Database" && resource.public_port && (
+              {resource.internal_port && (
                 <p className="text-sm text-slate-300 font-mono bg-slate-800/50 px-3 py-2 rounded">
-                  <span>Public:</span>{" "}
-                  <span className="text-indigo-400">
-                    {resource.public_port}
+                  <span className="text-purple-400">Private:</span>{" "}
+                  <span className="text-purple-300">
+                    {resource.internal_port}
                   </span>
                 </p>
               )}

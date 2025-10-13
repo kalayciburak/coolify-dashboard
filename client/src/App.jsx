@@ -36,6 +36,7 @@ const App = () => {
       </Suspense>
       <Tooltip id="backup-tooltip" />
       <Tooltip id="internal-url-tooltip" />
+      <Tooltip id="external-url-tooltip" />
     </BrowserRouter>
   );
 };

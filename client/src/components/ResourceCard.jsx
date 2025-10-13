@@ -41,6 +41,13 @@ const ResourceCard = ({ resource }) => {
   const tag = getResourceTag(resource);
   const hasDetails = hasResourceDetails(resource);
 
+  const resourceTypeId =
+    resource.type === RESOURCE_TYPES.SERVICE
+      ? "service"
+      : resource.type === RESOURCE_TYPES.DATABASE
+        ? "database"
+        : "application";
+
   const handleExpandToggle = () => {
     if (hasDetails) {
       setIsExpanded(!isExpanded);
@@ -63,6 +70,7 @@ const ResourceCard = ({ resource }) => {
           <ResourceHeader
             name={resource.name}
             type={resource.type}
+            resourceTypeId={resourceTypeId}
             sourceInfo={sourceInfo}
             urls={urls}
             tag={tag}

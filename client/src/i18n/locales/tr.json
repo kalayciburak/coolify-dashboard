@@ -59,7 +59,9 @@
     "description": "Açıklama",
     "viewYaml": "YAML Görüntüle",
     "internalConnectionAddress": "Dahili Bağlantı Adresi",
-    "veryImportant": "Çok Önemli",
+    "externalConnectionAddress": "Harici Bağlantı Adresi",
+    "external": "Harici",
+    "internal": "Dahili",
     "databasePassword": "Veritabanı Şifresi",
     "critical": "Kritik",
     "notConfigured": "Yapılandırılmamış",
@@ -101,6 +103,7 @@
   },
   "tooltips": {
     "internalConnection": "Adresi diğer servislerinizde kullanarak bu veritabanına bağlanabilirsiniz.",
+    "externalConnection": "Bu adresi altyapınızın dışından veritabanına bağlanmak için kullanabilirsiniz.",
     "backupWarning": "Veri kaybını önlemek için yedekleme yapılandırmanız önerilir."
   },
   "status": {

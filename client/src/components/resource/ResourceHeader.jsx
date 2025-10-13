@@ -11,6 +11,7 @@ import { formatDate, getTimeAgo } from "../../utils/dateUtils";
 const ResourceHeader = ({
   name,
   type,
+  resourceTypeId,
   sourceInfo,
   urls,
   tag,
@@ -71,7 +72,7 @@ const ResourceHeader = ({
               </div>
             </div>
 
-            {urls.length > 0 && (
+            {urls.length > 0 && resourceTypeId !== "database" && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -137,7 +138,7 @@ const ResourceHeader = ({
         </div>
 
         <div className="col-span-2 hidden md:flex justify-center">
-          {urls.length > 0 ? (
+          {urls.length > 0 && resourceTypeId !== "database" ? (
             <button
               onClick={(e) => {
                 e.stopPropagation();

@@ -59,7 +59,9 @@
     "description": "Description",
     "viewYaml": "View YAML",
     "internalConnectionAddress": "Internal Connection Address",
-    "veryImportant": "Very Important",
+    "externalConnectionAddress": "External Connection Address",
+    "external": "External",
+    "internal": "Internal",
     "databasePassword": "Database Password",
     "critical": "Critical",
     "notConfigured": "Not Configured",
@@ -101,6 +103,7 @@
   },
   "tooltips": {
     "internalConnection": "You can use this address in your other services to connect to this database.",
+    "externalConnection": "You can use this address to connect to this database from outside your infrastructure.",
     "backupWarning": "It is recommended to configure backup to prevent data loss."
   },
   "status": {
