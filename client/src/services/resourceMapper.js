@@ -1,6 +1,27 @@
 import { extractFqdns } from "../utils/urlUtils";
 import { RESOURCE_TYPES } from "../constants/resourceTypes";
 
+const extractFromCompose = (compose, key) => {
+  if (!compose || !key) return [];
+  const re = new RegExp(`${key}\\s*:\\s*'?([^'\\n]+)'?`, "i");
+  const m = compose.match(re);
+  if (!m?.[1]) return [];
+  return m[1]
+    .split(/[,\s]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+};
+
+const pickMinioPreferred = (urls) => {
+  if (!urls?.length) return urls;
+  const consoleUrls = urls.filter((u) => /console[-.]/i.test(u));
+  if (consoleUrls.length) {
+    const rest = urls.filter((u) => !/console[-.]/i.test(u));
+    return [...consoleUrls, ...rest];
+  }
+  return urls;
+};
+
 export const mapApplication = (app) => ({
   ...app,
   type: RESOURCE_TYPES.APPLICATION,
@@ -8,24 +29,41 @@ export const mapApplication = (app) => ({
 });
 
 export const mapService = (service) => {
-  const serviceFqdns = [];
+  let fqdns = [];
 
-  if (service.applications && service.applications.length > 0) {
-    service.applications.forEach((app) => {
+  if (service.applications?.length) {
+    for (const app of service.applications) {
       if (app.fqdn) {
-        serviceFqdns.push(...extractFqdns(app.fqdn));
+        fqdns.push(...extractFqdns(app.fqdn));
       }
-    });
+    }
   }
 
   if (service.fqdn) {
-    serviceFqdns.push(...extractFqdns(service.fqdn));
+    fqdns.push(...extractFqdns(service.fqdn));
   }
+
+  const envUrls =
+    service.environment?.COOLIFY_URL ||
+    service.environment?.COOLIFY_FQDN ||
+    null;
+  if (envUrls) {
+    fqdns.push(...extractFqdns(envUrls));
+  } else if (service.docker_compose) {
+    fqdns.push(...extractFromCompose(service.docker_compose, "COOLIFY_URL"));
+    if (!fqdns.length) {
+      fqdns.push(...extractFromCompose(service.docker_compose, "COOLIFY_FQDN"));
+    }
+  }
+
+  const uniq = [...new Set(fqdns)];
+  const serviceType = (service.service_type || service.type || "").toString().toLowerCase();
+  const ordered = serviceType === "minio" ? pickMinioPreferred(uniq) : uniq;
 
   return {
     ...service,
     type: RESOURCE_TYPES.SERVICE,
-    fqdns: [...new Set(serviceFqdns)],
+    fqdns: ordered,
     status: service.status || service.applications?.[0]?.status,
   };
 };
