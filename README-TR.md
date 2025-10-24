@@ -22,6 +22,7 @@ docker run -d -p 5000:5000 \
   --name coolify-dashboard \
   -e "ADMIN_USERNAME=admin" \
   -e "ADMIN_PASSWORD=guvenli_sifreniz" \
+  -e "ADMIN_2FA_SECRET=2fa_secret_anahtariniz" \
   -e "JWT_SECRET=jwt_secret_anahtariniz" \
   -e "ALLOWED_ORIGINS=https://dashboard.kalayciburak.com.tr" \
   -e "COOLIFY_BASE_URL=https://coolify.kalayciburak.com.tr" \
@@ -58,13 +59,29 @@ Aşağıdaki zorunlu ortam değişkenlerini ayarlayın:
 ```env
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=guvenli_sifreniz
+ADMIN_2FA_SECRET=2fa_secret_anahtariniz
 JWT_SECRET=jwt_secret_anahtariniz
 ALLOWED_ORIGINS=https://dashboard.kalayciburak.com.tr
 COOLIFY_BASE_URL=https://coolify.kalayciburak.com.tr
 COOLIFY_TOKEN=coolify_api_token_iniz
 ```
 
-### Adım 4: Coolify API Token Oluşturun
+### Adım 4: 2FA Secret Oluşturun
+
+Kimlik doğrulama için güvenli bir 2FA secret oluşturun:
+
+```bash
+# Yerel olarak çalıştırıyorsanız
+cd server
+npm run generate-2fa
+
+# Docker kullanıyorsanız, manuel olarak oluşturun:
+node -e "console.log(require('speakeasy').generateSecret({length: 32}).base32)"
+```
+
+Oluşturulan secret'ı kopyalayıp ortam değişkenlerinde `ADMIN_2FA_SECRET` olarak kullanın.
+
+### Adım 5: Coolify API Token Oluşturun
 
 **Önemli**: Dağıtıma başlamadan önce, uygun izinlere sahip Coolify API token'ı oluşturun:
 
@@ -78,7 +95,147 @@ COOLIFY_TOKEN=coolify_api_token_iniz
 
 **Not**: `read:sensitive` izni, ortam değişkenleri ve hassas yapılandırma verileri dahil olmak üzere detaylı kaynak bilgilerine erişim için gereklidir.
 
-### Adım 5: Dağıtım
+### Adım 6: 2FA Kurulumu (Tek Seferlik)
+
+Dağıtımdan sonra, İki Faktörlü Doğrulamayı kurun. **Bu işlem sadece bir kez yapılabilir!**
+
+1. Kurulum yapılıp yapılmadığını kontrol edin:
+   ```bash
+   curl https://dashboard.kalayciburak.com.tr/api/auth/2fa/status
+   # Yanıt: {"setupCompleted": false, "canSetup": true}
+   ```
+
+2. Admin bilgilerinizle `/api/auth/2fa/setup` endpoint'ine POST isteği gönderin:
+   ```bash
+   curl -X POST https://dashboard.kalayciburak.com.tr/api/auth/2fa/setup \
+     -H "Content-Type: application/json" \
+     -d '{"username":"admin","password":"sifreniz"}'
+   ```
+
+2. Yanıttaki `qrCode` alanında QR kod bulunur. Görüntülemek için:
+   - `qrCode` değerinin tamamını kopyalayın (`data:image/png;base64,...` ile başlar)
+   - Tarayıcınızın URL çubuğuna yapıştırın
+   - Enter'a basarak QR kod görselini görüntüleyin
+
+3. Görüntülenen QR kodu bir kimlik doğrulama uygulamasıyla tarayın:
+   - **Google Authenticator** (iOS/Android)
+   - **Microsoft Authenticator** (iOS/Android) - Logo gösterir
+   - **Authy** (iOS/Android/Desktop) - Logo gösterir
+   - **1Password** (Premium özellik)
+
+4. Secret'ı yedek olarak güvenli bir yerde saklayın
+
+### 2FA Sıfırlama/Yenileme
+
+2FA kurulumunuzu sıfırlamanız veya yenilemeniz gerekiyorsa (ör. kimlik doğrulama uygulaması erişimini kaybetme, güvenliği ihlal edilmiş secret, veya farklı bir cihaz kullanmak isteme), aşağıdaki adımları izleyin:
+
+#### Neden Manuel Sıfırlama?
+
+Dashboard, güvenlik nedenleriyle 2FA sıfırlama için bir kullanıcı arayüzü **sağlamaz**. Bu, yetkisiz kullanıcıların dashboard'a erişim sağlasalar bile 2FA kodlarını yeniden oluşturmalarını engeller. Sıfırlama işlemi sunucu düzeyinde erişim gerektirir ve bu maksimum güvenlik sağlar.
+
+#### Sıfırlama Süreci
+
+**1. Uygulamayı Durdurun**
+
+Öncelikle, çalışan uygulamanızı durdurun:
+
+```bash
+# Yerel olarak çalıştırıyorsanız
+npm stop
+
+# Docker kullanıyorsanız
+docker stop coolify-dashboard
+
+# Coolify üzerinde ise
+# Uygulamayı durdurmak için Coolify UI'ı kullanın
+```
+
+**2. 2FA State Dosyasını Silin**
+
+Bu dosya, 2FA kurulumunun tamamlanıp tamamlanmadığını takip eder:
+
+```bash
+# Server dizinine gidin
+cd server
+
+# State dosyasını silin
+rm .2fa-state.json
+
+# Docker/Coolify kullanıyorsanız, container'a erişin:
+docker exec -it coolify-dashboard rm /app/server/.2fa-state.json
+```
+
+**3. Yeni Bir 2FA Secret Oluşturun**
+
+Yeni bir secret anahtarı oluşturun:
+
+```bash
+# Yerel olarak çalıştırıyorsanız
+cd server
+npm run generate-2fa
+
+# Docker kullanıyorsanız, manuel olarak oluşturun:
+node -e "console.log(require('speakeasy').generateSecret({length: 32}).base32)"
+```
+
+Oluşturulan secret'ı kopyalayın (şuna benzer görünür: `JBSWY3DPEHPK3PXP`)
+
+**4. Ortam Değişkenlerini Güncelleyin**
+
+`.env` dosyanızı veya ortam yapılandırmanızı güncelleyin:
+
+```env
+ADMIN_2FA_SECRET=YENİ_SECRET_BURAYA
+```
+
+**Coolify'da:**
+1. Uygulama ayarlarınıza gidin
+2. **Environment Variables** (Ortam Değişkenleri) bölümüne tıklayın
+3. `ADMIN_2FA_SECRET` değerini yeni değerle güncelleyin
+4. Değişiklikleri kaydedin
+
+**5. Uygulamayı Yeniden Başlatın**
+
+```bash
+# Yerel olarak çalıştırıyorsanız
+npm run dev
+
+# Docker kullanıyorsanız
+docker restart coolify-dashboard
+
+# Coolify üzerinde ise
+# Uygulamayı yeniden başlatmak/deploy etmek için Coolify UI'ı kullanın
+```
+
+**6. 2FA'yı Tekrar Kurun**
+
+Yeniden başlatmadan sonra, yeni 2FA kurulumunu tamamlamak için [Adım 6](#adım-6-2fa-kurulumu-tek-seferlik)'yı takip edin:
+
+```bash
+curl -X POST https://dashboard.kalayciburak.com.tr/api/auth/2fa/setup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"sifreniz"}'
+```
+
+Yeni QR kodunu kimlik doğrulama uygulamanızla tarayın.
+
+**7. Eski Girdiyi Kimlik Doğrulama Uygulamasından Kaldırın**
+
+**Önemli**: Kimlik doğrulama uygulamanızdan eski "Coolify Dashboard" girişini silmeyi unutmayın, çünkü yeni secret ile artık çalışmayacaktır.
+
+#### Hızlı Referans
+
+| Adım | İşlem | Komut/Konum |
+|------|-------|-------------|
+| 1 | Uygulamayı Durdur | `docker stop coolify-dashboard` veya Coolify UI |
+| 2 | State Dosyasını Sil | `rm server/.2fa-state.json` |
+| 3 | Yeni Secret Oluştur | `npm run generate-2fa` veya `node -e "..."` |
+| 4 | Ortam Değişkenini Güncelle | `.env` dosyasını düzenle veya Coolify Ortam Değişkenleri |
+| 5 | Uygulamayı Yeniden Başlat | `docker restart` veya Coolify Deploy |
+| 6 | 2FA'yı Kur | `/api/auth/2fa/setup` endpoint'ine POST |
+| 7 | Kimlik Doğrulama Uygulamasını Güncelle | Eski girdiyi kaldır, yeni QR'ı tara |
+
+### Adım 7: Dağıtım
 
 - Yapılandırmayı kaydedin
 - Uygulamayı başlatmak için **"Deploy"** butonuna tıklayın
@@ -116,14 +273,15 @@ COOLIFY_TOKEN=coolify_api_token_iniz
 
 ## Ortam Değişkenleri
 
-| Değişken           | Açıklama                                                  | Örnek                                   | Gerekli |
-| ------------------ | --------------------------------------------------------- | --------------------------------------- | ------- |
-| `ADMIN_USERNAME`   | Dashboard yönetici kullanıcı adı                          | `admin`                                 | Evet    |
-| `ADMIN_PASSWORD`   | Dashboard yönetici şifresi                                | `guvenli_sifre`                         | Evet    |
-| `JWT_SECRET`       | JWT token üretimi için gizli anahtar                      | `rastgele_gizli_anahtar`                | Evet    |
-| `ALLOWED_ORIGINS`  | CORS izin verilen kaynaklar (virgülle ayrılmış)           | `https://dashboard.kalayciburak.com.tr` | Evet    |
-| `COOLIFY_BASE_URL` | Coolify instance temel URL'i                              | `https://coolify.kalayciburak.com.tr`   | Evet    |
-| `COOLIFY_TOKEN`    | read + read:sensitive yetkisine sahip Coolify API token'ı | `api_token_iniz`                        | Evet    |
+| Değişken           | Açıklama                                                  | Örnek                                    | Gerekli |
+| ------------------ | --------------------------------------------------------- | ---------------------------------------- | ------- |
+| `ADMIN_USERNAME`   | Dashboard yönetici kullanıcı adı                          | `admin`                                  | Evet    |
+| `ADMIN_PASSWORD`   | Dashboard yönetici şifresi                                | `guvenli_sifre`                          | Evet    |
+| `ADMIN_2FA_SECRET` | İki Faktörlü Doğrulama secret (Base32 encoded)            | `npm run generate-2fa` ile oluşturulur   | Evet    |
+| `JWT_SECRET`       | JWT token üretimi için gizli anahtar                      | `rastgele_gizli_anahtar`                 | Evet    |
+| `ALLOWED_ORIGINS`  | CORS izin verilen kaynaklar (virgülle ayrılmış)           | `https://dashboard.kalayciburak.com.tr`  | Evet    |
+| `COOLIFY_BASE_URL` | Coolify instance temel URL'i                              | `https://coolify.kalayciburak.com.tr`    | Evet    |
+| `COOLIFY_TOKEN`    | read + read:sensitive yetkisine sahip Coolify API token'ı | `api_token_iniz`                         | Evet    |
 
 ---
 
@@ -135,6 +293,7 @@ Coolify kullanırken, her bir uygulama ve servisin URL'lerini ve temel bilgileri
 
 ## Özellikler
 
+- **İki Faktörlü Doğrulama (2FA)**: TOTP tabanlı güvenli kimlik doğrulama
 - **Çok Dilli Destek**: İngilizce ve Türkçe arasında sorunsuz geçiş
 - **Responsive Tasarım**: Masaüstü ve mobil cihazlar için optimize edilmiş modern arayüz
 - **Gerçek Zamanlı İzleme**: Kaynak durumu ve sağlığını gerçek zamanlı takip
