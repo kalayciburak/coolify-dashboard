@@ -57,7 +57,9 @@ export const mapService = (service) => {
   }
 
   const uniq = [...new Set(fqdns)];
-  const serviceType = (service.service_type || service.type || "").toString().toLowerCase();
+  const serviceType = (service.service_type || service.type || "")
+    .toString()
+    .toLowerCase();
   const ordered = serviceType === "minio" ? pickMinioPreferred(uniq) : uniq;
 
   return {

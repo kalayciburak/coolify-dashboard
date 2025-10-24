@@ -214,8 +214,8 @@ const Login = () => {
                 ? t("auth.verifying")
                 : t("common.loading")
               : requires2FA
-              ? t("auth.verify")
-              : t("auth.login")}
+                ? t("auth.verify")
+                : t("auth.login")}
           </button>
 
           {requires2FA && (

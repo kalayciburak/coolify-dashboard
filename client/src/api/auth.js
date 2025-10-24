@@ -20,9 +20,10 @@ authApi.interceptors.request.use((config) => {
 authApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    const is2FARequest = error.config?.url?.includes("/verify-2fa") ||
-                         error.config?.url?.includes("/login") ||
-                         error.config?.url?.includes("/2fa/setup");
+    const is2FARequest =
+      error.config?.url?.includes("/verify-2fa") ||
+      error.config?.url?.includes("/login") ||
+      error.config?.url?.includes("/2fa/setup");
 
     if (error.response?.status === 401 && !is2FARequest) {
       localStorage.removeItem("token");
