@@ -22,6 +22,7 @@ docker run -d -p 5000:5000 \
   --name coolify-dashboard \
   -e "ADMIN_USERNAME=admin" \
   -e "ADMIN_PASSWORD=your_secure_password" \
+  -e "ADMIN_2FA_SECRET=your_2fa_secret_key" \
   -e "JWT_SECRET=your_jwt_secret_key" \
   -e "ALLOWED_ORIGINS=https://dashboard.kalayciburak.com.tr" \
   -e "COOLIFY_BASE_URL=https://coolify.kalayciburak.com.tr" \
@@ -58,13 +59,29 @@ Set the following required environment variables:
 ```env
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=your_secure_password
+ADMIN_2FA_SECRET=your_2fa_secret_key
 JWT_SECRET=your_jwt_secret_key
 ALLOWED_ORIGINS=https://dashboard.kalayciburak.com.tr
 COOLIFY_BASE_URL=https://coolify.kalayciburak.com.tr
 COOLIFY_TOKEN=your_coolify_api_token
 ```
 
-### Step 4: Generate Coolify API Token
+### Step 4: Generate 2FA Secret
+
+Generate a secure 2FA secret for authentication:
+
+```bash
+# If running locally
+cd server
+npm run generate-2fa
+
+# If using Docker, generate manually:
+node -e "console.log(require('speakeasy').generateSecret({length: 32}).base32)"
+```
+
+Copy the generated secret and use it as `ADMIN_2FA_SECRET` in your environment variables.
+
+### Step 5: Generate Coolify API Token
 
 **Important**: Before deploying, generate your Coolify API token with proper permissions:
 
@@ -78,7 +95,147 @@ COOLIFY_TOKEN=your_coolify_api_token
 
 **Note**: The `read:sensitive` permission is required to access detailed resource information, including environment variables and sensitive configuration data.
 
-### Step 5: Deploy
+### Step 6: Setup 2FA (One-Time Only)
+
+After deployment, setup Two-Factor Authentication. **This can only be done once!**
+
+1. Check if setup is available:
+   ```bash
+   curl https://dashboard.kalayciburak.com.tr/api/auth/2fa/status
+   # Response: {"setupCompleted": false, "canSetup": true}
+   ```
+
+2. Send a POST request to `/api/auth/2fa/setup` with your admin credentials:
+   ```bash
+   curl -X POST https://dashboard.kalayciburak.com.tr/api/auth/2fa/setup \
+     -H "Content-Type: application/json" \
+     -d '{"username":"admin","password":"your_password"}'
+   ```
+
+2. The response will include a QR code in the `qrCode` field. To view it:
+   - Copy the entire `qrCode` value (starts with `data:image/png;base64,...`)
+   - Paste it into your browser's URL bar
+   - Press Enter to display the QR code image
+
+3. Scan the displayed QR code with an authenticator app:
+   - **Google Authenticator** (iOS/Android)
+   - **Microsoft Authenticator** (iOS/Android) - Shows logo
+   - **Authy** (iOS/Android/Desktop) - Shows logo
+   - **1Password** (Premium feature)
+
+4. Save the secret in a secure location as backup
+
+### Resetting/Regenerating 2FA
+
+If you need to reset or regenerate your 2FA setup (e.g., lost authenticator app access, compromised secret, or want to use a different device), follow these steps:
+
+#### Why Manual Reset?
+
+The dashboard **does not** provide a UI for resetting 2FA for security reasons. This prevents unauthorized users from regenerating 2FA codes even if they gain access to your dashboard. The reset process requires server-level access, ensuring maximum security.
+
+#### Reset Process
+
+**1. Stop the Application**
+
+First, stop your running application:
+
+```bash
+# If running locally
+npm stop
+
+# If using Docker
+docker stop coolify-dashboard
+
+# If on Coolify
+# Use Coolify UI to stop the application
+```
+
+**2. Delete the 2FA State File**
+
+This file tracks whether 2FA setup has been completed:
+
+```bash
+# Navigate to server directory
+cd server
+
+# Delete the state file
+rm .2fa-state.json
+
+# If using Docker/Coolify, access the container:
+docker exec -it coolify-dashboard rm /app/server/.2fa-state.json
+```
+
+**3. Generate a New 2FA Secret**
+
+Create a new secret key:
+
+```bash
+# If running locally
+cd server
+npm run generate-2fa
+
+# If using Docker, generate manually:
+node -e "console.log(require('speakeasy').generateSecret({length: 32}).base32)"
+```
+
+Copy the generated secret (it looks like: `JBSWY3DPEHPK3PXP`)
+
+**4. Update Environment Variables**
+
+Update your `.env` file or environment configuration:
+
+```env
+ADMIN_2FA_SECRET=YOUR_NEW_SECRET_HERE
+```
+
+**On Coolify:**
+1. Go to your application settings
+2. Navigate to **Environment Variables**
+3. Update `ADMIN_2FA_SECRET` with the new value
+4. Save changes
+
+**5. Restart the Application**
+
+```bash
+# If running locally
+npm run dev
+
+# If using Docker
+docker restart coolify-dashboard
+
+# If on Coolify
+# Use Coolify UI to restart/deploy the application
+```
+
+**6. Setup 2FA Again**
+
+After restart, follow [Step 6](#step-6-setup-2fa-one-time-only) to complete the new 2FA setup:
+
+```bash
+curl -X POST https://dashboard.kalayciburak.com.tr/api/auth/2fa/setup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"your_password"}'
+```
+
+Scan the new QR code with your authenticator app.
+
+**7. Remove Old Entry from Authenticator App**
+
+**Important**: Don't forget to delete the old "Coolify Dashboard" entry from your authenticator app, as it will no longer work with the new secret.
+
+#### Quick Reference
+
+| Step | Action | Command/Location |
+|------|--------|------------------|
+| 1 | Stop Application | `docker stop coolify-dashboard` or Coolify UI |
+| 2 | Delete State File | `rm server/.2fa-state.json` |
+| 3 | Generate New Secret | `npm run generate-2fa` or `node -e "..."` |
+| 4 | Update Env Var | Edit `.env` or Coolify Environment Variables |
+| 5 | Restart App | `docker restart` or Coolify Deploy |
+| 6 | Setup 2FA | POST to `/api/auth/2fa/setup` |
+| 7 | Update Authenticator | Remove old entry, scan new QR |
+
+### Step 7: Deploy
 
 - Save the configuration
 - Click **"Deploy"** to start the application
@@ -120,6 +277,7 @@ COOLIFY_TOKEN=your_coolify_api_token
 | ------------------ | --------------------------------------------------- | --------------------------------------- | -------- |
 | `ADMIN_USERNAME`   | Dashboard administrator username                    | `admin`                                 | Yes      |
 | `ADMIN_PASSWORD`   | Dashboard administrator password                    | `secure_password`                       | Yes      |
+| `ADMIN_2FA_SECRET` | Two-Factor Authentication secret (Base32 encoded)   | Generate using `npm run generate-2fa`   | Yes      |
 | `JWT_SECRET`       | Secret key for JWT token generation                 | `random_secret_key`                     | Yes      |
 | `ALLOWED_ORIGINS`  | CORS allowed origins (comma-separated for multiple) | `https://dashboard.kalayciburak.com.tr` | Yes      |
 | `COOLIFY_BASE_URL` | Your Coolify instance base URL                      | `https://coolify.kalayciburak.com.tr`   | Yes      |
@@ -135,6 +293,7 @@ While using Coolify, I found myself constantly clicking through each application
 
 ## Features
 
+- **Two-Factor Authentication (2FA)**: Enhanced security with TOTP-based authentication
 - **Multi-language Support**: Seamless switching between English and Turkish
 - **Responsive Design**: Modern UI optimized for desktop and mobile devices
 - **Real-time Monitoring**: Track resource status and health in real-time

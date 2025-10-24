@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import toast from "react-hot-toast";
 import { fetchAllResources } from "../api/coolify";
 import { logout } from "../api/auth";
 import ResourceCard from "../components/ResourceCard";
@@ -20,6 +21,7 @@ import {
   CircleStackIcon,
   ArrowUpIcon,
   ArrowDownIcon,
+  HandRaisedIcon,
 } from "@heroicons/react/24/outline";
 
 const Dashboard = () => {
@@ -64,7 +66,15 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+
+    toast.success(t("auth.logoutSuccess"), {
+      icon: <HandRaisedIcon className="w-6 h-6" />,
+      duration: 2000,
+    });
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 500);
   };
 
   const handleSort = (field) => {
@@ -124,7 +134,7 @@ const Dashboard = () => {
               <span className="hidden md:inline">{t("dashboard.title")}</span>
               <span className="md:hidden">Dashboard</span>
             </h1>
-            <div className="flex items-center gap-4 md:gap-6">
+            <div className="flex items-center gap-2 md:gap-4">
               <LanguageSelector />
               <button
                 onClick={handleLogout}
