@@ -17,6 +17,20 @@ router.post(
       throw new AppError(validation.error, 401);
     }
 
+    // Development modunda 2FA'yı bypass et
+    if (process.env.NODE_ENV === "development") {
+      const token = authService.generateToken(username);
+      const user = authService.getUserInfo(username);
+
+      res.json({
+        message: "Giriş başarılı (Development mode - 2FA disabled)",
+        token,
+        user,
+        requires2FA: false,
+      });
+      return;
+    }
+
     res.json({
       message: "Kullanıcı adı ve şifre doğrulandı",
       requires2FA: true,

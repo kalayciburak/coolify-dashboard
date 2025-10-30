@@ -37,6 +37,18 @@ const Login = () => {
           toast.success(t("auth.credentialsVerified"), {
             icon: <CheckCircleIcon className="w-5 h-5" />,
           });
+        } else {
+          // Development mode - 2FA disabled, direct login
+          localStorage.setItem("token", response.token);
+          localStorage.setItem("user", JSON.stringify(response.user));
+
+          toast.success(t("auth.loginSuccess"), {
+            icon: <CheckCircleIcon className="w-6 h-6" />,
+          });
+
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 500);
         }
       } else {
         const response = await verify2FA(username, password, twoFactorCode);
