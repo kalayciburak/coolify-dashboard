@@ -27,6 +27,7 @@ docker run -d -p 5000:5000 \
   -e "ALLOWED_ORIGINS=https://dashboard.kalayciburak.com.tr" \
   -e "COOLIFY_BASE_URL=https://coolify.kalayciburak.com.tr" \
   -e "COOLIFY_TOKEN=your_coolify_api_token" \
+  -e "DASHBOARD_USER_TYPE=admin" \
   torukobyte/coolify-dashboard:latest
 ```
 
@@ -64,6 +65,7 @@ JWT_SECRET=your_jwt_secret_key
 ALLOWED_ORIGINS=https://dashboard.kalayciburak.com.tr
 COOLIFY_BASE_URL=https://coolify.kalayciburak.com.tr
 COOLIFY_TOKEN=your_coolify_api_token
+DASHBOARD_USER_TYPE=admin
 ```
 
 ### Step 4: Generate 2FA Secret
@@ -83,8 +85,9 @@ Copy the generated secret and use it as `ADMIN_2FA_SECRET` in your environment v
 
 ### Step 5: Generate Coolify API Token
 
-**Important**: Before deploying, generate your Coolify API token with proper permissions:
+**Important**: Before deploying, generate your Coolify API token with proper permissions based on your user type:
 
+#### For Viewer Mode (Read-Only Access)
 1. Navigate to your Coolify instance settings
 2. Go to **API Tokens** section
 3. Click **"Create New Token"**
@@ -92,8 +95,26 @@ Copy the generated secret and use it as `ADMIN_2FA_SECRET` in your environment v
    - **read**: Enable all read permissions
    - **read:sensitive**: Enable sensitive data read access
 5. Copy the generated token and use it as `COOLIFY_TOKEN`
+6. Set `DASHBOARD_USER_TYPE=viewer` in environment variables
 
 **Note**: The `read:sensitive` permission is required to access detailed resource information, including environment variables and sensitive configuration data.
+
+#### For Admin Mode (Full Control)
+1. Navigate to your Coolify instance settings
+2. Go to **API Tokens** section
+3. Click **"Create New Token"**
+4. Select the following permissions:
+   - **write**: Enable all write permissions (includes read access)
+5. Copy the generated token and use it as `COOLIFY_TOKEN`
+6. Set `DASHBOARD_USER_TYPE=admin` in environment variables
+
+**Note**: The `write` permission is **required** for admin features, which include:
+- Starting and stopping services
+- Deleting services
+- Viewing live service logs with filtering
+- All read operations available in viewer mode
+
+**Warning**: Only use admin mode with users you trust, as it grants full control over your Coolify services.
 
 ### Step 6: Setup 2FA (One-Time Only)
 
@@ -273,15 +294,17 @@ Scan the new QR code with your authenticator app.
 
 ## Environment Variables
 
-| Variable           | Description                                         | Example                                 | Required |
-| ------------------ | --------------------------------------------------- | --------------------------------------- | -------- |
-| `ADMIN_USERNAME`   | Dashboard administrator username                    | `admin`                                 | Yes      |
-| `ADMIN_PASSWORD`   | Dashboard administrator password                    | `secure_password`                       | Yes      |
-| `ADMIN_2FA_SECRET` | Two-Factor Authentication secret (Base32 encoded)   | Generate using `npm run generate-2fa`   | Yes      |
-| `JWT_SECRET`       | Secret key for JWT token generation                 | `random_secret_key`                     | Yes      |
-| `ALLOWED_ORIGINS`  | CORS allowed origins (comma-separated for multiple) | `https://dashboard.kalayciburak.com.tr` | Yes      |
-| `COOLIFY_BASE_URL` | Your Coolify instance base URL                      | `https://coolify.kalayciburak.com.tr`   | Yes      |
-| `COOLIFY_TOKEN`    | Coolify API token with read + read:sensitive access | `your_api_token`                        | Yes      |
+| Variable              | Description                                                       | Example                                 | Required | Default      |
+| --------------------- | ----------------------------------------------------------------- | --------------------------------------- | -------- | ------------ |
+| `ADMIN_USERNAME`      | Dashboard administrator username                                  | `admin`                                 | Yes      | -            |
+| `ADMIN_PASSWORD`      | Dashboard administrator password                                  | `secure_password`                       | Yes      | -            |
+| `ADMIN_2FA_SECRET`    | Two-Factor Authentication secret (Base32 encoded)                 | Generate using `npm run generate-2fa`   | Yes      | -            |
+| `JWT_SECRET`          | Secret key for JWT token generation                               | `random_secret_key`                     | Yes      | -            |
+| `ALLOWED_ORIGINS`     | CORS allowed origins (comma-separated for multiple)               | `https://dashboard.kalayciburak.com.tr` | Yes      | -            |
+| `COOLIFY_BASE_URL`    | Your Coolify instance base URL                                    | `https://coolify.kalayciburak.com.tr`   | Yes      | -            |
+| `COOLIFY_TOKEN`       | Coolify API token (read+read:sensitive for viewer, write for admin) | `your_api_token`                     | Yes      | -            |
+| `DASHBOARD_USER_TYPE` | User access level: `viewer` (read-only) or `admin` (full control) | `admin` or `viewer`                   | No       | `viewer`     |
+| `NODE_ENV`            | Environment mode: `development` disables 2FA for easier testing   | `development` or `production`           | No       | `production` |
 
 ---
 
@@ -294,12 +317,30 @@ While using Coolify, I found myself constantly clicking through each application
 ## Features
 
 - **Two-Factor Authentication (2FA)**: Enhanced security with TOTP-based authentication
+- **Role-Based Access Control**: Viewer mode (read-only) and Admin mode (full control)
+- **Admin Service Management**:
+  - Start and stop services with one click
+  - Delete services directly from the dashboard
+  - View live service logs with real-time streaming
+  - Filter logs with keyword search
+  - Auto-scroll toggle for log viewing
+  - Real-time action loading states with elapsed time indicators
+  - Visual feedback with animated borders and icons
+  - Modern glassmorphism status banner with real-time elapsed time display
+  - Localized time format (shows "1d 30s" in Turkish, "1m 30s" in English)
+- **Intelligent State Management**:
+  - **Zustand Store**: Lightweight, centralized state management
+  - **Adaptive Polling**: Smart polling intervals (5s → 30s) for resource efficiency
+  - **Optimistic Updates**: Instant UI feedback before API confirmation
+  - **Silent Background Sync**: Updates data without disrupting user experience
+  - **Action-Specific Loading**: Per-resource, per-action loading states
+  - **Auto-Cleanup**: Prevents memory leaks with proper interval cleanup
 - **Multi-language Support**: Seamless switching between English and Turkish
 - **Responsive Design**: Modern UI optimized for desktop and mobile devices
 - **Real-time Monitoring**: Track resource status and health in real-time
 - **Secure Authentication**: JWT-based authentication with secure token management
 - **Resource Monitoring**: Monitor applications, services, and databases
-- **Modern Tech Stack**: Built with React, Tailwind CSS, and Express.js
+- **Modern Tech Stack**: Built with React 19, Zustand, Tailwind CSS 4, and Express.js
 
 ---
 
@@ -311,6 +352,7 @@ coolify-dashboard/
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
 │   │   ├── pages/          # Page components
+│   │   ├── store/          # Zustand state management
 │   │   ├── api/            # API client services
 │   │   ├── services/       # Business logic layer
 │   │   ├── utils/          # Utility functions
@@ -345,9 +387,33 @@ cd coolify-dashboard
 # Install dependencies
 npm install
 
-# Start development server
-npm run dev
+# Create server/.env file with required variables
+# See "Environment Variables" section below for all options
+
+# Start development server (with 2FA disabled)
+NODE_ENV=development npm run dev
 ```
+
+### Development Mode (2FA Bypass)
+
+For easier local development, you can disable Two-Factor Authentication by setting `NODE_ENV=development`:
+
+```bash
+# Linux/macOS
+NODE_ENV=development npm run dev
+
+# Windows (PowerShell)
+$env:NODE_ENV="development"; npm run dev
+
+# Windows (CMD)
+set NODE_ENV=development && npm run dev
+```
+
+**Important Notes:**
+- 2FA is **automatically disabled** when `NODE_ENV=development` is set
+- In production, **never** set `NODE_ENV=development` as this bypasses 2FA security
+- Without `NODE_ENV=development`, 2FA is always required (default production behavior)
+- You can also add `NODE_ENV=development` to your `server/.env` file for persistent dev mode
 
 ### Available Scripts
 

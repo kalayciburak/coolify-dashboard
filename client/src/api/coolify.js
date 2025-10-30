@@ -63,3 +63,28 @@ export const fetchAllResources = async () => {
 
   return [...applications, ...services, ...databases];
 };
+
+export const getUserType = async () => {
+  const response = await api.get("/user-type");
+  return response.data.userType;
+};
+
+export const startResource = async (type, uuid) => {
+  const response = await api.post(`/${type}s/${uuid}/start`);
+  return response.data;
+};
+
+export const stopResource = async (type, uuid) => {
+  const response = await api.post(`/${type}s/${uuid}/stop`);
+  return response.data;
+};
+
+export const deleteResource = async (type, uuid) => {
+  const response = await api.delete(`/${type}s/${uuid}`);
+  return response.data;
+};
+
+export const getResourceLogs = async (type, uuid) => {
+  const response = await api.get(`/${type}s/${uuid}/logs`);
+  return response.data;
+};

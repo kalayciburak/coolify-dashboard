@@ -27,6 +27,7 @@ docker run -d -p 5000:5000 \
   -e "ALLOWED_ORIGINS=https://dashboard.kalayciburak.com.tr" \
   -e "COOLIFY_BASE_URL=https://coolify.kalayciburak.com.tr" \
   -e "COOLIFY_TOKEN=coolify_api_token_iniz" \
+  -e "DASHBOARD_USER_TYPE=admin" \
   torukobyte/coolify-dashboard:latest
 ```
 
@@ -64,6 +65,7 @@ JWT_SECRET=jwt_secret_anahtariniz
 ALLOWED_ORIGINS=https://dashboard.kalayciburak.com.tr
 COOLIFY_BASE_URL=https://coolify.kalayciburak.com.tr
 COOLIFY_TOKEN=coolify_api_token_iniz
+DASHBOARD_USER_TYPE=admin
 ```
 
 ### Adım 4: 2FA Secret Oluşturun
@@ -83,17 +85,36 @@ Oluşturulan secret'ı kopyalayıp ortam değişkenlerinde `ADMIN_2FA_SECRET` ol
 
 ### Adım 5: Coolify API Token Oluşturun
 
-**Önemli**: Dağıtıma başlamadan önce, uygun izinlere sahip Coolify API token'ı oluşturun:
+**Önemli**: Dağıtıma başlamadan önce, kullanıcı tipinize göre uygun izinlere sahip Coolify API token'ı oluşturun:
 
+#### Görüntüleyici Modu (Sadece Okuma Erişimi)
 1. Coolify instance ayarlarınıza gidin
-2. **API Tokens** bölümüne tıklayın
+2. **API Tokens** bölümüne gidin
 3. **"Create New Token"** butonuna tıklayın
 4. Aşağıdaki izinleri seçin:
    - **read**: Tüm okuma izinlerini aktifleştirin
    - **read:sensitive**: Hassas veri okuma erişimini aktifleştirin
 5. Oluşturulan token'ı kopyalayın ve `COOLIFY_TOKEN` olarak kullanın
+6. Ortam değişkenlerinde `DASHBOARD_USER_TYPE=viewer` olarak ayarlayın
 
 **Not**: `read:sensitive` izni, ortam değişkenleri ve hassas yapılandırma verileri dahil olmak üzere detaylı kaynak bilgilerine erişim için gereklidir.
+
+#### Admin Modu (Tam Kontrol)
+1. Coolify instance ayarlarınıza gidin
+2. **API Tokens** bölümüne gidin
+3. **"Create New Token"** butonuna tıklayın
+4. Aşağıdaki izinleri seçin:
+   - **write**: Tüm yazma izinlerini aktifleştirin (okuma erişimini de içerir)
+5. Oluşturulan token'ı kopyalayın ve `COOLIFY_TOKEN` olarak kullanın
+6. Ortam değişkenlerinde `DASHBOARD_USER_TYPE=admin` olarak ayarlayın
+
+**Not**: `write` izni admin özellikleri için **zorunludur**. Bu özellikler şunları içerir:
+- Servisleri başlatma ve durdurma
+- Servisleri silme
+- Filtreleme ile canlı servis loglarını görüntüleme
+- Görüntüleyici modunda bulunan tüm okuma işlemleri
+
+**Uyarı**: Admin modunu yalnızca güvendiğiniz kullanıcılarla kullanın, çünkü Coolify servisleriniz üzerinde tam kontrol sağlar.
 
 ### Adım 6: 2FA Kurulumu (Tek Seferlik)
 
@@ -273,15 +294,17 @@ Yeni QR kodunu kimlik doğrulama uygulamanızla tarayın.
 
 ## Ortam Değişkenleri
 
-| Değişken           | Açıklama                                                  | Örnek                                    | Gerekli |
-| ------------------ | --------------------------------------------------------- | ---------------------------------------- | ------- |
-| `ADMIN_USERNAME`   | Dashboard yönetici kullanıcı adı                          | `admin`                                  | Evet    |
-| `ADMIN_PASSWORD`   | Dashboard yönetici şifresi                                | `guvenli_sifre`                          | Evet    |
-| `ADMIN_2FA_SECRET` | İki Faktörlü Doğrulama secret (Base32 encoded)            | `npm run generate-2fa` ile oluşturulur   | Evet    |
-| `JWT_SECRET`       | JWT token üretimi için gizli anahtar                      | `rastgele_gizli_anahtar`                 | Evet    |
-| `ALLOWED_ORIGINS`  | CORS izin verilen kaynaklar (virgülle ayrılmış)           | `https://dashboard.kalayciburak.com.tr`  | Evet    |
-| `COOLIFY_BASE_URL` | Coolify instance temel URL'i                              | `https://coolify.kalayciburak.com.tr`    | Evet    |
-| `COOLIFY_TOKEN`    | read + read:sensitive yetkisine sahip Coolify API token'ı | `api_token_iniz`                         | Evet    |
+| Değişken              | Açıklama                                                                               | Örnek                                   | Gerekli | Varsayılan   |
+| --------------------- | -------------------------------------------------------------------------------------- | --------------------------------------- | ------- | ------------ |
+| `ADMIN_USERNAME`      | Dashboard yönetici kullanıcı adı                                                       | `admin`                                 | Evet    | -            |
+| `ADMIN_PASSWORD`      | Dashboard yönetici şifresi                                                             | `guvenli_sifre`                         | Evet    | -            |
+| `ADMIN_2FA_SECRET`    | İki Faktörlü Doğrulama secret (Base32 encoded)                                         | `npm run generate-2fa` ile oluşturun    | Evet    | -            |
+| `JWT_SECRET`          | JWT token üretimi için gizli anahtar                                                   | `rastgele_gizli_anahtar`                | Evet    | -            |
+| `ALLOWED_ORIGINS`     | CORS izin verilen kaynaklar (virgülle ayrılmış)                                        | `https://dashboard.kalayciburak.com.tr` | Evet    | -            |
+| `COOLIFY_BASE_URL`    | Coolify instance temel URL'i                                                           | `https://coolify.kalayciburak.com.tr`   | Evet    | -            |
+| `COOLIFY_TOKEN`       | Coolify API token (viewer için read+read:sensitive, admin için write)                  | `your_api_token`                        | Evet    | -            |
+| `DASHBOARD_USER_TYPE` | Kullanıcı erişim seviyesi: `viewer` (sadece okuma) veya `admin` (tam kontrol)          | `admin` veya `viewer`                   | Hayır   | `viewer`     |
+| `NODE_ENV`            | Ortam modu: `development` test için 2FA'yı devre dışı bırakır                          | `development` veya `production`         | Hayır   | `production` |
 
 ---
 
@@ -294,12 +317,30 @@ Coolify kullanırken, her bir uygulama ve servisin URL'lerini ve temel bilgileri
 ## Özellikler
 
 - **İki Faktörlü Doğrulama (2FA)**: TOTP tabanlı güvenli kimlik doğrulama
+- **Rol Tabanlı Erişim Kontrolü**: Görüntüleyici modu (salt okunur) ve Admin modu (tam kontrol)
+- **Admin Servis Yönetimi**:
+  - Tek tıkla servisleri başlatma ve durdurma
+  - Servisleri doğrudan dashboard'dan silme
+  - Gerçek zamanlı servis loglarını izleme
+  - Anahtar kelime ile log filtreleme
+  - Otomatik kaydırma özelliği
+  - Geçen süre göstergeli gerçek zamanlı işlem yükleme durumları
+  - Animasyonlu çerçeveler ve ikonlarla görsel geri bildirim
+  - Gerçek zamanlı geçen süre gösterimi ile modern glassmorphism durum banner'ı
+  - Yerelleştirilmiş zaman formatı (Türkçe'de "1d 30s", İngilizce'de "1m 30s" görünür)
+- **Akıllı State Yönetimi**:
+  - **Zustand Store**: Hafif, merkezi state yönetimi
+  - **Adaptif Polling**: Kaynak verimliliği için akıllı yoklama aralıkları (5s → 30s)
+  - **İyimser Güncellemeler**: API onayından önce anında UI geri bildirimi
+  - **Sessiz Arka Plan Senkronizasyonu**: Kullanıcı deneyimini bozmadan veri güncelleme
+  - **İşleme Özel Yükleme**: Kaynak başına, işlem başına yükleme durumları
+  - **Otomatik Temizleme**: Uygun interval temizliği ile bellek sızıntılarını önler
 - **Çok Dilli Destek**: İngilizce ve Türkçe arasında sorunsuz geçiş
 - **Responsive Tasarım**: Masaüstü ve mobil cihazlar için optimize edilmiş modern arayüz
 - **Gerçek Zamanlı İzleme**: Kaynak durumu ve sağlığını gerçek zamanlı takip
 - **Güvenli Kimlik Doğrulama**: JWT tabanlı güvenli token yönetimi
 - **Kaynak İzleme**: Uygulamalar, servisler ve veritabanlarını izleme
-- **Modern Teknoloji Yığını**: React, Tailwind CSS ve Express.js ile geliştirilmiştir
+- **Modern Teknoloji Yığını**: React 19, Zustand, Tailwind CSS 4 ve Express.js ile geliştirilmiştir
 
 ---
 
@@ -311,6 +352,7 @@ coolify-dashboard/
 │   ├── src/
 │   │   ├── components/     # Yeniden kullanılabilir UI bileşenleri
 │   │   ├── pages/          # Sayfa bileşenleri
+│   │   ├── store/          # Zustand state yönetimi
 │   │   ├── api/            # API client servisleri
 │   │   ├── services/       # İş mantığı katmanı
 │   │   ├── utils/          # Yardımcı fonksiyonlar
@@ -345,9 +387,33 @@ cd coolify-dashboard
 # Bağımlılıkları yükleyin
 npm install
 
-# Geliştirme sunucusunu başlatın
-npm run dev
+# server/.env dosyasını oluşturun ve gerekli değişkenleri ayarlayın
+# Tüm seçenekler için "Ortam Değişkenleri" bölümüne bakın
+
+# Geliştirme sunucusunu başlatın (2FA devre dışı)
+NODE_ENV=development npm run dev
 ```
+
+### Geliştirme Modu (2FA Bypass)
+
+Yerel geliştirmeyi kolaylaştırmak için, `NODE_ENV=development` ayarlayarak İki Faktörlü Doğrulamayı devre dışı bırakabilirsiniz:
+
+```bash
+# Linux/macOS
+NODE_ENV=development npm run dev
+
+# Windows (PowerShell)
+$env:NODE_ENV="development"; npm run dev
+
+# Windows (CMD)
+set NODE_ENV=development && npm run dev
+```
+
+**Önemli Notlar:**
+- `NODE_ENV=development` ayarlandığında 2FA **otomatik olarak devre dışı** bırakılır
+- Production'da, 2FA güvenliğini atladığı için **asla** `NODE_ENV=development` kullanmayın
+- `NODE_ENV=development` olmadan, 2FA her zaman gereklidir (varsayılan production davranışı)
+- Kalıcı dev modu için `server/.env` dosyanıza `NODE_ENV=development` ekleyebilirsiniz
 
 ### Mevcut Script'ler
 

@@ -1,8 +1,7 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
-import { fetchAllResources } from "../api/coolify";
 import { logout } from "../api/auth";
 import ResourceCard from "../components/ResourceCard";
 import CustomDropdown from "../components/CustomDropdown";
@@ -10,6 +9,7 @@ import LanguageSelector from "../components/LanguageSelector";
 import { filterAndSortResources } from "../services/resourceService";
 import { RESOURCE_TYPES } from "../constants/resourceTypes";
 import { getSortOptions } from "../constants/sortOptions";
+import useResourceStore from "../store/resourceStore";
 import {
   ArrowRightStartOnRectangleIcon,
   ArrowPathIcon,
@@ -26,43 +26,39 @@ import {
 
 const Dashboard = () => {
   const { t } = useTranslation();
-  const [resources, setResources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const {
+    applications: storeApplications,
+    services: storeServices,
+    databases: storeDatabases,
+    loading,
+    error,
+    fetchResources,
+    cleanup,
+  } = useResourceStore();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("applications");
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
-  const navigate = useNavigate();
-
-  const loadResources = useCallback(async (isInitialLoad = false) => {
-    try {
-      if (isInitialLoad) {
-        setLoading(true);
-      } else {
-        setRefreshing(true);
-      }
-      setError(null);
-      const data = await fetchAllResources();
-      const filteredData = data.filter((resource) => {
-        const name = resource.name?.toLowerCase() || "";
-        const isDashboard =
-          name.includes("dashboard") && name.includes("frontend");
-        return !isDashboard;
-      });
-      setResources(filteredData);
-    } catch (err) {
-      setError(err.message || "Failed to load resources");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
-    loadResources(true);
-  }, [loadResources]);
+    fetchResources().finally(() => setIsInitialLoad(false));
+    return () => cleanup();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await fetchResources();
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -86,17 +82,36 @@ const Dashboard = () => {
     }
   };
 
-  const applications = useMemo(
-    () => resources.filter((r) => r.type === RESOURCE_TYPES.APPLICATION),
-    [resources]
-  );
-  const services = useMemo(
-    () => resources.filter((r) => r.type === RESOURCE_TYPES.SERVICE),
-    [resources]
-  );
-  const databases = useMemo(
-    () => resources.filter((r) => r.type === RESOURCE_TYPES.DATABASE),
-    [resources]
+  const applications = useMemo(() => {
+    return storeApplications.filter((resource) => {
+      const name = resource.name?.toLowerCase() || "";
+      const isDashboard =
+        name.includes("dashboard") && name.includes("frontend");
+      return !isDashboard;
+    });
+  }, [storeApplications]);
+
+  const services = useMemo(() => {
+    return storeServices.filter((resource) => {
+      const name = resource.name?.toLowerCase() || "";
+      const isDashboard =
+        name.includes("dashboard") && name.includes("frontend");
+      return !isDashboard;
+    });
+  }, [storeServices]);
+
+  const databases = useMemo(() => {
+    return storeDatabases.filter((resource) => {
+      const name = resource.name?.toLowerCase() || "";
+      const isDashboard =
+        name.includes("dashboard") && name.includes("frontend");
+      return !isDashboard;
+    });
+  }, [storeDatabases]);
+
+  const resources = useMemo(
+    () => [...applications, ...services, ...databases],
+    [applications, services, databases]
   );
 
   const filteredAndSortedResources = useMemo(
@@ -111,7 +126,7 @@ const Dashboard = () => {
     [resources, activeView, searchTerm, sortBy, sortOrder]
   );
 
-  if (loading) {
+  if (loading && isInitialLoad) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center">
@@ -158,9 +173,13 @@ const Dashboard = () => {
                 : error}
             </span>
             <button
-              onClick={() => loadResources(false)}
-              className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 rounded-lg transition text-sm font-medium cursor-pointer touch-manipulation whitespace-nowrap"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 rounded-lg transition text-sm font-medium cursor-pointer touch-manipulation whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
+              {isRefreshing && (
+                <ArrowPathIcon className="w-4 h-4 animate-spin" />
+              )}
               {t("common.refresh")}
             </button>
           </div>
@@ -218,15 +237,15 @@ const Dashboard = () => {
               </button>
             </div>
             <button
-              onClick={() => loadResources(false)}
-              disabled={refreshing}
-              className="px-3 md:px-4 py-2 md:py-1.5 bg-purple-500/20 hover:bg-purple-500/30 active:bg-purple-500/40 text-purple-200 rounded-lg border border-purple-500/50 transition font-medium flex items-center gap-1.5 md:gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap touch-manipulation"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="px-3 md:px-4 py-2 md:py-1.5 bg-purple-500/20 hover:bg-purple-500/30 active:bg-purple-500/40 text-purple-200 rounded-lg border border-purple-500/50 transition-all duration-200 font-medium flex items-center gap-1.5 md:gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap touch-manipulation"
             >
               <ArrowPathIcon
-                className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
+                className={`w-4 h-4 transition-transform duration-200 ${isRefreshing ? "animate-spin" : ""}`}
               />
               <span className="hidden md:inline">
-                {refreshing ? t("common.loading") : t("common.refresh")}
+                {isRefreshing ? t("common.refreshing") : t("common.refresh")}
               </span>
             </button>
           </div>
@@ -307,12 +326,12 @@ const Dashboard = () => {
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm("")}
-                className="cursor-pointer mt-5 inline-flex items-center justify-center gap-1.5 px-4 py-2 
-           bg-gradient-to-r from-purple-500/50 to-purple-600/50 
-           text-white text-sm font-semibold 
-           rounded-lg shadow-md transform transition-all duration-500 
-            hover:from-purple-600/50 hover:to-purple-700/50 hover:shadow-xl 
-              active:from-purple-700/50 active:to-purple-800/50 
+                className="cursor-pointer mt-5 inline-flex items-center justify-center gap-1.5 px-4 py-2
+           bg-gradient-to-r from-purple-500/50 to-purple-600/50
+           text-white text-sm font-semibold
+           rounded-lg shadow-md transform transition-all duration-500
+            hover:from-purple-600/50 hover:to-purple-700/50 hover:shadow-xl
+              active:from-purple-700/50 active:to-purple-800/50
            active:from-purple-600/50 active:to-purple-700/50
            disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-md"
               >
