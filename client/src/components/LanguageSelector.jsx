@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
+import { useSoundEffects } from "../hooks/useSoundEffects";
+import { SOUND_TYPES } from "../utils/soundUtils";
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
+  const { playSound } = useSoundEffects();
 
   const changeLanguage = () => {
+    playSound(SOUND_TYPES.CLICK);
     const nextLanguage = i18n.language === "tr" ? "en" : "tr";
     i18n.changeLanguage(nextLanguage);
     localStorage.setItem("language", nextLanguage);

@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   InformationCircleIcon,
@@ -9,28 +8,11 @@ import {
   SignalIcon,
   ArrowUpOnSquareIcon,
   ShareIcon,
-  DocumentTextIcon,
-  ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 import { getDockerImage } from "../../utils/resourceUtils";
 import { getStatusColor } from "../../utils/statusUtils";
-import { getUserType } from "../../api/coolify";
-import ResourceActionButtons from "./ResourceActionButtons";
 
-const ResourceDetails = ({ resource, onShowYaml }) => {
-  const [userType, setUserType] = useState(null);
-
-  useEffect(() => {
-    const fetchUserType = async () => {
-      try {
-        const type = await getUserType();
-        setUserType(type);
-      } catch (error) {
-        console.error("Failed to fetch user type:", error);
-      }
-    };
-    fetchUserType();
-  }, []);
+const ResourceDetails = ({ resource }) => {
   const { t } = useTranslation();
   const dockerImage = getDockerImage(resource);
   const statusColor = getStatusColor(resource.status);
@@ -177,32 +159,6 @@ const ResourceDetails = ({ resource, onShowYaml }) => {
           </div>
         )}
       </div>
-
-      {userType === "admin" && (
-        <div className="bg-slate-900/50 rounded-lg p-4 md:p-6 border border-white/10">
-          <div className="flex items-center gap-2 mb-4">
-            <ShieldCheckIcon className="w-5 h-5 text-purple-400" />
-            <span className="text-sm font-semibold text-white">
-              {t("admin.adminControls")}
-            </span>
-          </div>
-          <div className="flex justify-center">
-            <ResourceActionButtons resource={resource} />
-          </div>
-        </div>
-      )}
-
-      {(resource.docker_compose || resource.docker_compose_raw) && (
-        <div className="flex justify-center pt-2">
-          <button
-            onClick={onShowYaml}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500/50 hover:bg-indigo-500/90 text-slate-100 hover:text-white rounded-lg border border-indigo-500/40 transition cursor-pointer text-sm font-medium"
-          >
-            <DocumentTextIcon className="w-4 h-4" />
-            {t("resourceCard.viewYaml")}
-          </button>
-        </div>
-      )}
     </div>
   );
 };

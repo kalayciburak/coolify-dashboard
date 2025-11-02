@@ -10,6 +10,8 @@ import { filterAndSortResources } from "../services/resourceService";
 import { RESOURCE_TYPES } from "../constants/resourceTypes";
 import { getSortOptions } from "../constants/sortOptions";
 import useResourceStore from "../store/resourceStore";
+import { useSoundEffects } from "../hooks/useSoundEffects";
+import { SOUND_TYPES } from "../utils/soundUtils";
 import {
   ArrowRightStartOnRectangleIcon,
   ArrowPathIcon,
@@ -27,6 +29,7 @@ import {
 const Dashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { playSound } = useSoundEffects();
 
   const {
     applications: storeApplications,
@@ -52,6 +55,7 @@ const Dashboard = () => {
   }, []);
 
   const handleRefresh = async () => {
+    playSound(SOUND_TYPES.CLICK);
     setIsRefreshing(true);
     try {
       await fetchResources();
@@ -61,6 +65,7 @@ const Dashboard = () => {
   };
 
   const handleLogout = () => {
+    playSound(SOUND_TYPES.CLICK);
     logout();
 
     toast.success(t("auth.logoutSuccess"), {
@@ -74,6 +79,7 @@ const Dashboard = () => {
   };
 
   const handleSort = (field) => {
+    playSound(SOUND_TYPES.CLICK);
     if (sortBy === field) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
@@ -189,7 +195,10 @@ const Dashboard = () => {
           <div className="flex items-center justify-between mb-4 flex-wrap gap-3 md:gap-4">
             <div className="flex gap-1.5 md:gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
               <button
-                onClick={() => setActiveView("applications")}
+                onClick={() => {
+                  playSound(SOUND_TYPES.CLICK);
+                  setActiveView("applications");
+                }}
                 className={`px-3 md:px-6 py-1.5 rounded-lg border font-medium transition cursor-pointer flex items-center gap-1.5 md:gap-2 text-sm whitespace-nowrap touch-manipulation ${
                   activeView === "applications"
                     ? "bg-purple-500/50 border-purple-500/50 text-purple-200"
@@ -206,7 +215,10 @@ const Dashboard = () => {
                 </span>
               </button>
               <button
-                onClick={() => setActiveView("services")}
+                onClick={() => {
+                  playSound(SOUND_TYPES.CLICK);
+                  setActiveView("services");
+                }}
                 className={`px-3 md:px-6 py-1.5 rounded-lg border font-medium transition cursor-pointer flex items-center gap-1.5 md:gap-2 text-sm whitespace-nowrap touch-manipulation ${
                   activeView === "services"
                     ? "bg-purple-500/50 border-purple-500/50 text-purple-200"
@@ -221,7 +233,10 @@ const Dashboard = () => {
                 <span className="text-xs md:text-sm">({services.length})</span>
               </button>
               <button
-                onClick={() => setActiveView("databases")}
+                onClick={() => {
+                  playSound(SOUND_TYPES.CLICK);
+                  setActiveView("databases");
+                }}
                 className={`px-3 md:px-6 py-1.5 rounded-lg border font-medium transition cursor-pointer flex items-center gap-1.5 md:gap-2 text-sm whitespace-nowrap touch-manipulation ${
                   activeView === "databases"
                     ? "bg-purple-500/50 border-purple-500/50 text-purple-200"
@@ -275,6 +290,7 @@ const Dashboard = () => {
               {sortBy !== "name" && (
                 <button
                   onClick={() => {
+                    playSound(SOUND_TYPES.CLICK);
                     setSortBy("name");
                     setSortOrder("asc");
                   }}
@@ -285,9 +301,10 @@ const Dashboard = () => {
                 </button>
               )}
               <button
-                onClick={() =>
-                  setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                }
+                onClick={() => {
+                  playSound(SOUND_TYPES.CLICK);
+                  setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                }}
                 className="flex items-center px-3 md:px-4 py-2 md:py-1.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm hover:bg-white/10 active:bg-white/20 transition cursor-pointer touch-manipulation"
                 title={
                   sortOrder === "asc"
@@ -325,7 +342,10 @@ const Dashboard = () => {
             </p>
             {searchTerm && (
               <button
-                onClick={() => setSearchTerm("")}
+                onClick={() => {
+                  playSound(SOUND_TYPES.CLICK);
+                  setSearchTerm("");
+                }}
                 className="cursor-pointer mt-5 inline-flex items-center justify-center gap-1.5 px-4 py-2
            bg-gradient-to-r from-purple-500/50 to-purple-600/50
            text-white text-sm font-semibold
@@ -344,7 +364,9 @@ const Dashboard = () => {
           <div className="bg-white/2 border border-white/10 rounded-lg overflow-hidden">
             <div className="hidden lg:block bg-white/7 border-b text-center border-white/10 px-6 py-3">
               <div className="grid grid-cols-12 gap-4 text-xs font-medium text-slate-300 uppercase tracking-wider">
-                <div className="col-span-1 text-center">{t("common.view")}</div>
+                <div className="col-span-1 text-center">
+                  {t("common.detail")}
+                </div>
                 <div
                   className="col-span-1 text-center cursor-pointer hover:text-slate-200 transition"
                   onClick={() => handleSort("status")}
@@ -353,13 +375,12 @@ const Dashboard = () => {
                   {sortBy === "status" && (sortOrder === "asc" ? "↑" : "↓")}
                 </div>
                 <div
-                  className="col-span-2 cursor-pointer hover:text-slate-200 transition"
+                  className="col-span-3 cursor-pointer hover:text-slate-200 transition"
                   onClick={() => handleSort("name")}
                 >
                   {t("common.name")}{" "}
                   {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
                 </div>
-                <div className="col-span-2 hidden md:block">URL</div>
                 <div className="col-span-8 md:hidden">
                   {t("common.description")}
                 </div>
@@ -377,7 +398,9 @@ const Dashboard = () => {
                   {t("common.updated")}{" "}
                   {sortBy === "updated_at" && (sortOrder === "asc" ? "↑" : "↓")}
                 </div>
-                <div className="col-span-2 hidden md:block">Tip</div>
+                <div className="col-span-3 hidden md:block">
+                  {t("common.type")}
+                </div>
               </div>
             </div>
             {filteredAndSortedResources.map((resource, index) => (

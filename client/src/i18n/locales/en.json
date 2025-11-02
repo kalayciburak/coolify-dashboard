@@ -9,6 +9,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "view": "View",
+    "detail": "Detail",
     "refresh": "Refresh",
     "search": "Search by name, description or URL...",
     "filter": "Filter",
@@ -16,7 +17,8 @@
     "name": "Name",
     "description": "Info",
     "created": "Created",
-    "updated": "Updated"
+    "updated": "Updated",
+    "type": "Type"
   },
   "auth": {
     "login": "Login",

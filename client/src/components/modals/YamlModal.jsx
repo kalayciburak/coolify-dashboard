@@ -1,11 +1,37 @@
+import { useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { customSyntaxTheme } from "../../styles/syntaxTheme";
+import { useSoundEffects } from "../../hooks/useSoundEffects";
+import { SOUND_TYPES } from "../../utils/soundUtils";
 
 const YamlModal = ({ name, content, onClose }) => {
+  const { playSound } = useSoundEffects();
+
+  const handleClose = () => {
+    playSound(SOUND_TYPES.CLICK);
+    // Remove focus from any button when closing
+    if (document.activeElement) {
+      document.activeElement.blur();
+    }
+    onClose();
+  };
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div
       className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         className="bg-[#1e1a3c] rounded-xl border border-[#4e3976]/30 max-w-4xl w-full max-h-[80vh] flex flex-col"
@@ -16,7 +42,7 @@ const YamlModal = ({ name, content, onClose }) => {
             Docker Compose - {name}
           </h3>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-slate-400 hover:text-white transition cursor-pointer font-bold text-xl"
           >
             &times;
