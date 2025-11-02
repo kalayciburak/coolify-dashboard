@@ -22,6 +22,24 @@ const ResourceHeader = ({
     <>
       <div className="lg:hidden">
         <div className="flex items-start gap-3">
+          {hasDetails ? (
+            <div className="w-4 h-4 flex items-center justify-center mt-1">
+              {isExpanded ? (
+                <ChevronUpIcon
+                  className="w-4 h-4 text-slate-200 flex-shrink-0"
+                  strokeWidth={3}
+                />
+              ) : (
+                <ChevronDownIcon
+                  className="w-4 h-4 text-slate-200 flex-shrink-0"
+                  strokeWidth={3}
+                />
+              )}
+            </div>
+          ) : (
+            <div className="w-4" />
+          )}
+
           <span
             className={`w-3 h-3 rounded-full ${statusColor} flex-shrink-0 mt-1.5`}
           ></span>
@@ -42,10 +60,6 @@ const ResourceHeader = ({
                     </span>
                   </p>
                 )}
-              </div>
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                <ResourceTypeIcon className="w-4 h-4 text-slate-400" />
-                <span className="text-xs text-slate-300">{type}</span>
               </div>
             </div>
 
