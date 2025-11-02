@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { isAuthenticated } from "./api/auth";
 import { SoundProvider } from "./hooks/useSoundEffects";
 import { QueryProvider } from "./providers/QueryProvider";
+import ErrorBoundary from "./components/ErrorBoundary";
 import SoundToggle from "./components/SoundToggle";
 
 const Login = lazy(() => import("./pages/Login"));
@@ -22,28 +23,29 @@ const LoadingSpinner = () => (
 
 const App = () => {
   return (
-    <QueryProvider>
-      <SoundProvider>
-        <BrowserRouter>
-          <Suspense fallback={<LoadingSpinner />}>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <PrivateRoute>
-                    <Dashboard />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </Suspense>
-          <Tooltip id="backup-tooltip" />
-          <Tooltip id="internal-url-tooltip" />
-          <Tooltip id="external-url-tooltip" />
-          <Toaster
+    <ErrorBoundary>
+      <QueryProvider>
+        <SoundProvider>
+          <BrowserRouter>
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <PrivateRoute>
+                      <Dashboard />
+                    </PrivateRoute>
+                  }
+                />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </Suspense>
+            <Tooltip id="backup-tooltip" />
+            <Tooltip id="internal-url-tooltip" />
+            <Tooltip id="external-url-tooltip" />
+            <Toaster
             position="top-right"
             reverseOrder={false}
             gutter={12}
@@ -95,6 +97,7 @@ const App = () => {
         </BrowserRouter>
       </SoundProvider>
     </QueryProvider>
+    </ErrorBoundary>
   );
 };
 

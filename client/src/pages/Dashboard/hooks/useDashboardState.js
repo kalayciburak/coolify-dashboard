@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import useResourceStore from "../../../store/resourceStore";
+import { useState, useMemo } from "react";
+import { useResources, useRefetchResources } from "../../../hooks/useResources";
 import {
   filterDashboardResources,
   filterAndSortResources,
@@ -7,27 +7,23 @@ import {
 
 const useDashboardState = () => {
   const {
-    applications: storeApplications,
-    services: storeServices,
-    databases: storeDatabases,
-    loading,
+    data: resourcesData,
+    isLoading: loading,
     error,
-    fetchResources,
-    cleanup,
-  } = useResourceStore();
+    isInitialLoading: isInitialLoad,
+  } = useResources();
+
+  const refetchResources = useRefetchResources();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("applications");
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  useEffect(() => {
-    fetchResources().finally(() => setIsInitialLoad(false));
-    return () => cleanup();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const storeApplications = resourcesData?.applications || [];
+  const storeServices = resourcesData?.services || [];
+  const storeDatabases = resourcesData?.databases || [];
 
   const applications = useMemo(
     () => filterDashboardResources(storeApplications),
@@ -64,7 +60,7 @@ const useDashboardState = () => {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      await fetchResources();
+      await refetchResources();
     } finally {
       setTimeout(() => setIsRefreshing(false), 500);
     }
@@ -92,7 +88,7 @@ const useDashboardState = () => {
     isRefreshing,
     isInitialLoad,
     loading,
-    error,
+    error: error?.message || null,
 
     applications,
     services,
