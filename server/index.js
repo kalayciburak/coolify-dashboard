@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import coolifyRoutes from "./routes/coolify.js";
+import configRoutes from "./routes/config.js";
 import { corsMiddleware } from "./middleware/cors.js";
 import { handleError } from "./utils/errorHandler.js";
 
@@ -21,6 +22,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/coolify", coolifyRoutes);
+app.use("/api/config", configRoutes);
 
 app.get("/healthz", (req, res) => {
   res.json({

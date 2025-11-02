@@ -5,10 +5,12 @@ import {
   getSoundEnabled,
   setSoundEnabled,
 } from "../utils/soundUtils";
+import { useIsMobile } from "./useIsMobile";
 
 const SoundContext = createContext(null);
 
 export const SoundProvider = ({ children }) => {
+  const isMobile = useIsMobile();
   const [isSoundEnabled, setIsSoundEnabled] = useState(() => getSoundEnabled());
 
   const toggleSound = useCallback(() => {
@@ -21,11 +23,13 @@ export const SoundProvider = ({ children }) => {
 
   const playSound = useCallback(
     (soundType, volume = 0.3) => {
+      if (isMobile) return;
+
       if (isSoundEnabled) {
         playSoundType(soundType, volume);
       }
     },
-    [isSoundEnabled]
+    [isSoundEnabled, isMobile]
   );
 
   const value = {

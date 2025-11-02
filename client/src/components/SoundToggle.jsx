@@ -1,9 +1,13 @@
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import { useSoundEffects } from "../hooks/useSoundEffects";
 import { SOUND_TYPES } from "../utils/soundUtils";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 const SoundToggle = () => {
   const { isSoundEnabled, toggleSound, playSound } = useSoundEffects();
+  const isMobile = useIsMobile();
+
+  if (isMobile) return null;
 
   const handleClick = () => {
     playSound(SOUND_TYPES.CLICK);

@@ -23,10 +23,4 @@ router.use("/", createResourceRouter("applications", RESOURCE_CONFIGS.applicatio
 router.use("/", createResourceRouter("services", RESOURCE_CONFIGS.services));
 router.use("/", createResourceRouter("databases", RESOURCE_CONFIGS.databases));
 
-// Custom routes (business logic that doesn't fit generic CRUD)
-router.get("/user-type", verifyToken, async (req, res) => {
-  const userType = process.env.DASHBOARD_USER_TYPE || "viewer";
-  res.json({ userType: userType.toLowerCase() });
-});
-
 export default router;
