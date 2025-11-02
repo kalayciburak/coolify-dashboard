@@ -7,6 +7,7 @@ import { SoundProvider } from "./hooks/useSoundEffects";
 import { QueryProvider } from "./providers/QueryProvider";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SoundToggle from "./components/SoundToggle";
+import BackToTop from "./components/BackToTop";
 
 const Login = lazy(() => import("./pages/Login"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -94,6 +95,7 @@ const App = () => {
             }}
           />
           <SoundToggle />
+          <BackToTop />
         </BrowserRouter>
       </SoundProvider>
     </QueryProvider>

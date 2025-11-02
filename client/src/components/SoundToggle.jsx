@@ -17,7 +17,7 @@ const SoundToggle = () => {
   return (
     <button
       onClick={handleClick}
-      className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-gradient-to-br from-indigo-500/70 to-purple-600/70 hover:from-indigo-600 hover:to-purple-700 shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 transition-all duration-300 hover:scale-110 cursor-pointer group opacity-60 hover:opacity-100"
+      className="fixed bottom-6 left-6 z-50 p-3 rounded-full bg-gradient-to-br from-indigo-500/70 to-purple-600/70 hover:from-indigo-600 hover:to-purple-700 shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 transition-all duration-300 hover:scale-110 cursor-pointer group opacity-60 hover:opacity-100"
       aria-label={isSoundEnabled ? "Sesi Kapat" : "Sesi Aç"}
       title={isSoundEnabled ? "Sesi Kapat" : "Sesi Aç"}
     >
