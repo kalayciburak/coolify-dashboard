@@ -59,11 +59,6 @@ class ResourceRepository {
   async getLogs(type, uuid) {
     return await this.client.get(`/${type}s/${uuid}/logs`);
   }
-
-  async getUserType() {
-    const data = await this.client.get("/user-type");
-    return data.userType;
-  }
 }
 
 const resourceRepository = new ResourceRepository();
