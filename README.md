@@ -335,6 +335,7 @@ While using Coolify, I found myself constantly clicking through each application
   - **Silent Background Sync**: Updates data without disrupting user experience
   - **Action-Specific Loading**: Per-resource, per-action loading states
   - **Auto-Cleanup**: Prevents memory leaks with proper interval cleanup
+- **Sound Effects System**: Subtle audio feedback for button interactions with toggle control in bottom-right corner
 - **Multi-language Support**: Seamless switching between English and Turkish
 - **Responsive Design**: Modern UI optimized for desktop and mobile devices
 - **Real-time Monitoring**: Track resource status and health in real-time

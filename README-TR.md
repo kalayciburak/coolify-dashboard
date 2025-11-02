@@ -335,6 +335,7 @@ Coolify kullanırken, her bir uygulama ve servisin URL'lerini ve temel bilgileri
   - **Sessiz Arka Plan Senkronizasyonu**: Kullanıcı deneyimini bozmadan veri güncelleme
   - **İşleme Özel Yükleme**: Kaynak başına, işlem başına yükleme durumları
   - **Otomatik Temizleme**: Uygun interval temizliği ile bellek sızıntılarını önler
+- **Ses Efektleri Sistemi**: Sağ alt köşede açma/kapama kontrolü ile buton etkileşimleri için hafif ses geri bildirimi
 - **Çok Dilli Destek**: İngilizce ve Türkçe arasında sorunsuz geçiş
 - **Responsive Tasarım**: Masaüstü ve mobil cihazlar için optimize edilmiş modern arayüz
 - **Gerçek Zamanlı İzleme**: Kaynak durumu ve sağlığını gerçek zamanlı takip

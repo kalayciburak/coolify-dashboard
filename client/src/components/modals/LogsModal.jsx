@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { getResourceLogs } from "../../api/coolify";
+import { useSoundEffects } from "../../hooks/useSoundEffects";
+import { SOUND_TYPES } from "../../utils/soundUtils";
 
 const highlightLog = (log) => {
   const parts = [];
@@ -128,12 +130,22 @@ const highlightLog = (log) => {
 
 const LogsModal = ({ name, type, uuid, onClose }) => {
   const { t } = useTranslation();
+  const { playSound } = useSoundEffects();
   const [logs, setLogs] = useState([]);
   const [filter, setFilter] = useState("");
   const [autoScroll, setAutoScroll] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const logsEndRef = useRef(null);
+
+  const handleClose = () => {
+    playSound(SOUND_TYPES.CLICK);
+    // Remove focus from any button when closing
+    if (document.activeElement) {
+      document.activeElement.blur();
+    }
+    onClose();
+  };
 
   const fetchLogs = async () => {
     setIsLoading(true);
@@ -167,6 +179,18 @@ const LogsModal = ({ name, type, uuid, onClose }) => {
     }
   }, [logs, autoScroll]);
 
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const filteredLogs = logs.filter((log) =>
     log.toLowerCase().includes(filter.toLowerCase())
   );
@@ -174,7 +198,7 @@ const LogsModal = ({ name, type, uuid, onClose }) => {
   return (
     <div
       className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         className="bg-[#1e1a3c] rounded-xl border border-[#4e3976]/30 max-w-6xl w-full max-h-[80vh] flex flex-col"
@@ -199,7 +223,7 @@ const LogsModal = ({ name, type, uuid, onClose }) => {
             )}
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-slate-400 hover:text-white transition cursor-pointer font-bold text-xl"
           >
             &times;

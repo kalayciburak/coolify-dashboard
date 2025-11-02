@@ -9,6 +9,7 @@
     "delete": "Sil",
     "edit": "Düzenle",
     "view": "Görüntüle",
+    "detail": "Detay",
     "refresh": "Yenile",
     "search": "İsim, açıklama veya URL ile ara...",
     "filter": "Filtrele",
@@ -16,7 +17,8 @@
     "name": "İsim",
     "description": "Bilgiler",
     "created": "Oluşturulma",
-    "updated": "Güncelleme"
+    "updated": "Güncelleme",
+    "type": "Tip"
   },
   "auth": {
     "login": "Giriş Yap",

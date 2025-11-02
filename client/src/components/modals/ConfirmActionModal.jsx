@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import {
   PlayIcon,
   StopIcon,
@@ -6,9 +7,12 @@ import {
   TrashIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
+import { useSoundEffects } from "../../hooks/useSoundEffects";
+import { SOUND_TYPES } from "../../utils/soundUtils";
 
 const ConfirmActionModal = ({ action, resourceName, onConfirm, onClose }) => {
   const { t } = useTranslation();
+  const { playSound } = useSoundEffects();
 
   const actionConfig = {
     start: {
@@ -45,10 +49,37 @@ const ConfirmActionModal = ({ action, resourceName, onConfirm, onClose }) => {
   const config = actionConfig[action];
   const Icon = config.icon;
 
+  const handleClose = () => {
+    playSound(SOUND_TYPES.CLICK);
+    // Remove focus from any button when closing
+    if (document.activeElement) {
+      document.activeElement.blur();
+    }
+    onClose();
+  };
+
+  const handleConfirm = () => {
+    playSound(SOUND_TYPES.CLICK);
+    onConfirm();
+    onClose();
+  };
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div
       className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         className="bg-[#1e1a3c] rounded-xl border border-white/10 max-w-md w-full"
@@ -73,16 +104,13 @@ const ConfirmActionModal = ({ action, resourceName, onConfirm, onClose }) => {
           )}
           <div className="flex gap-3">
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="flex-1 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-white rounded-lg border border-white/10 transition font-medium cursor-pointer text-sm"
             >
               {t("modals.cancel")}
             </button>
             <button
-              onClick={() => {
-                onConfirm();
-                onClose();
-              }}
+              onClick={handleConfirm}
               className={`flex-1 px-4 py-2.5 ${config.confirmBg} text-white rounded-lg transition font-medium cursor-pointer text-sm`}
             >
               {t(`admin.${action}`)}
