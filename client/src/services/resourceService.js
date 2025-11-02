@@ -1,5 +1,18 @@
 import { RESOURCE_TYPES } from "../constants/resourceTypes";
 
+/**
+ * Filters out dashboard frontend resources
+ * Single Responsibility: Only checks if resource is dashboard frontend
+ */
+export const isDashboardFrontend = (resource) => {
+  const name = resource.name?.toLowerCase() || "";
+  return name.includes("dashboard") && name.includes("frontend");
+};
+
+/**
+ * Filters resources by type
+ * Open/Closed: New resource types handled via constants
+ */
 export const filterResources = (resources, activeView) => {
   switch (activeView) {
     case "applications":
@@ -11,6 +24,14 @@ export const filterResources = (resources, activeView) => {
     default:
       return [];
   }
+};
+
+/**
+ * Removes dashboard frontend from resource lists
+ * Used by Dashboard component to hide self
+ */
+export const filterDashboardResources = (resources) => {
+  return resources.filter((resource) => !isDashboardFrontend(resource));
 };
 
 export const searchResources = (resources, searchTerm) => {
