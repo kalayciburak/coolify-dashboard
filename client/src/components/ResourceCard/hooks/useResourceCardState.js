@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUserType } from "../../../api/coolify";
+import { useConfig } from "../../../hooks/useConfig";
 import useResourceStore from "../../../store/resourceStore";
 
 const useResourceCardState = (resource) => {
@@ -10,8 +10,9 @@ const useResourceCardState = (resource) => {
   const [confirmUrl, setConfirmUrl] = useState(null);
   const [confirmAction, setConfirmAction] = useState(null);
 
-  // User permissions
-  const [userType, setUserType] = useState(null);
+  // User permissions - fetch from global config cache
+  const { data: config } = useConfig();
+  const userType = config?.userType;
 
   // Action timing
   const [realtimeElapsed, setRealtimeElapsed] = useState(0);
@@ -20,19 +21,6 @@ const useResourceCardState = (resource) => {
   const { actionLoading } = useResourceStore();
   const actionKey = `${resource.type}-${resource.uuid}`;
   const currentAction = actionLoading[actionKey];
-
-  // Fetch user type on mount
-  useEffect(() => {
-    const fetchUserType = async () => {
-      try {
-        const type = await getUserType();
-        setUserType(type);
-      } catch (error) {
-        console.error("Failed to fetch user type:", error);
-      }
-    };
-    fetchUserType();
-  }, []);
 
   // Handle action timing updates
   useEffect(() => {
