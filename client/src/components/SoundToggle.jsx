@@ -2,15 +2,10 @@ import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import { useSoundEffects } from "../hooks/useSoundEffects";
 import { SOUND_TYPES } from "../utils/soundUtils";
 
-/**
- * Sound Toggle Component
- * Fixed position button in bottom-right corner to toggle sound effects
- */
 const SoundToggle = () => {
   const { isSoundEnabled, toggleSound, playSound } = useSoundEffects();
 
   const handleClick = () => {
-    // Play sound before toggling (so it plays even when turning off)
     playSound(SOUND_TYPES.CLICK);
     toggleSound();
   };

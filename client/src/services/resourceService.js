@@ -1,5 +1,10 @@
 import { RESOURCE_TYPES } from "../constants/resourceTypes";
 
+export const isDashboardFrontend = (resource) => {
+  const name = resource.name?.toLowerCase() || "";
+  return name.includes("dashboard");
+};
+
 export const filterResources = (resources, activeView) => {
   switch (activeView) {
     case "applications":
@@ -11,6 +16,10 @@ export const filterResources = (resources, activeView) => {
     default:
       return [];
   }
+};
+
+export const filterDashboardResources = (resources) => {
+  return resources.filter((resource) => !isDashboardFrontend(resource));
 };
 
 export const searchResources = (resources, searchTerm) => {
