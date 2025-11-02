@@ -15,26 +15,11 @@ import {
   HandRaisedIcon,
 } from "@heroicons/react/24/outline";
 
-/**
- * Dashboard - Main application dashboard (Refactored)
- *
- * SOLID Principles Applied:
- * - Single Responsibility: Only orchestrates child components
- * - Open/Closed: New features added via new components
- * - Dependency Inversion: Uses hooks and components abstractions
- *
- * Refactoring Results:
- * - Original: 463 lines (God component)
- * - Refactored: ~160 lines (Orchestrator)
- * - Extracted: 4 new files (components + hook)
- * - Complexity: VERY HIGH → LOW
- */
 const Dashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { playSound } = useSoundEffects();
 
-  // All state management extracted to custom hook
   const {
     searchTerm,
     activeView,

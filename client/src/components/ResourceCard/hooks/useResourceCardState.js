@@ -2,20 +2,6 @@ import { useState, useEffect } from "react";
 import { getUserType } from "../../../api/coolify";
 import useResourceStore from "../../../store/resourceStore";
 
-/**
- * useResourceCardState - Manages ResourceCard local state
- *
- * SOLID Principles:
- * - Single Responsibility: Only manages card UI state (modals, timing, user)
- * - Interface Segregation: Returns clean, focused interface
- * - Dependency Inversion: Uses store abstraction
- *
- * Responsibilities:
- * - Modal visibility states
- * - User type fetching
- * - Action timing
- * - Expand/collapse state
- */
 const useResourceCardState = (resource) => {
   // UI state
   const [isExpanded, setIsExpanded] = useState(false);

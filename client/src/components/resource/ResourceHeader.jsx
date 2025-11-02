@@ -22,21 +22,6 @@ const ResourceHeader = ({
     <>
       <div className="lg:hidden">
         <div className="flex items-start gap-3">
-          {hasDetails && (
-            <div className="w-4 h-4 flex items-center justify-center mt-1 flex-shrink-0">
-              {isExpanded ? (
-                <ChevronUpIcon
-                  className="w-4 h-4 text-slate-200 flex-shrink-0"
-                  strokeWidth={3}
-                />
-              ) : (
-                <ChevronDownIcon
-                  className="w-4 h-4 text-slate-200 flex-shrink-0"
-                  strokeWidth={3}
-                />
-              )}
-            </div>
-          )}
           <span
             className={`w-3 h-3 rounded-full ${statusColor} flex-shrink-0 mt-1.5`}
           ></span>
@@ -73,7 +58,7 @@ const ResourceHeader = ({
         </div>
       </div>
 
-      <div className="hidden lg:grid grid-cols-12 gap-4 items-center">
+      <div className="hidden lg:grid grid-cols-11 gap-4 items-center">
         <div className="col-span-1 flex justify-center">
           {hasDetails ? (
             <div className="w-4 h-4 flex items-center justify-center">
@@ -98,7 +83,7 @@ const ResourceHeader = ({
           <span className={`w-3 h-3 rounded-full ${statusColor}`}></span>
         </div>
 
-        <div className="col-span-3 flex justify-center">
+        <div className="col-span-2 flex justify-center">
           <div className="flex flex-col gap-1 items-center w-full px-2">
             <span className="text-white font-medium truncate block text-sm w-full text-center">
               {name}

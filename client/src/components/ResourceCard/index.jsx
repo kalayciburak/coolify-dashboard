@@ -22,36 +22,18 @@ import { useSoundEffects } from "../../hooks/useSoundEffects";
 import { SOUND_TYPES } from "../../utils/soundUtils";
 import { useTranslation } from "react-i18next";
 
-// Lazy load modals
 const ConfirmUrlModal = lazy(() => import("../modals/ConfirmUrlModal"));
 const YamlModal = lazy(() => import("../modals/YamlModal"));
 const LogsModal = lazy(() => import("../modals/LogsModal"));
 const ConfirmActionModal = lazy(() => import("../modals/ConfirmActionModal"));
 
-/**
- * ResourceCard - Resource display card (Refactored)
- *
- * SOLID Principles Applied:
- * - Single Responsibility: Only orchestrates child components
- * - Open/Closed: New features added via new components
- * - Dependency Inversion: Uses hooks and components abstractions
- * - Interface Segregation: Clean props to child components
- *
- * Refactoring Results:
- * - Original: 440 lines (God component)
- * - Refactored: ~180 lines (Orchestrator)
- * - Extracted: 5 new files (2 hooks + 2 components + body)
- * - Complexity: VERY HIGH → LOW
- */
 const ResourceCard = ({ resource }) => {
   const { t } = useTranslation();
   const { playSound } = useSoundEffects();
 
-  // Get resource action handlers from store
   const { startResourceAction, stopResourceAction, deleteResourceAction } =
     useResourceStore();
 
-  // State management (extracted to hook)
   const {
     isExpanded,
     setIsExpanded,
@@ -68,11 +50,9 @@ const ResourceCard = ({ resource }) => {
     realtimeElapsed,
   } = useResourceCardState(resource);
 
-  // Action utilities (extracted to hook)
   const { actionColor, ActionIcon, actionText, formatElapsedTime } =
     useResourceActions(currentAction);
 
-  // Derived data
   const statusColor = getStatusColor(resource.status);
   const urls =
     resource.fqdns && resource.fqdns.length > 0
@@ -97,7 +77,6 @@ const ResourceCard = ({ resource }) => {
         ? "database"
         : "application";
 
-  // Handlers
   const handleExpandToggle = () => {
     if (hasDetails) {
       playSound(SOUND_TYPES.CLICK);
@@ -122,7 +101,6 @@ const ResourceCard = ({ resource }) => {
         isExpanded ? "bg-purple-500/5" : ""
       }`}
     >
-      {/* Header Section (Clickable) */}
       <div
         className={`hover:bg-white/5 active:bg-white/10 transition-colors duration-150 ${
           hasDetails ? "cursor-pointer" : ""
@@ -154,10 +132,8 @@ const ResourceCard = ({ resource }) => {
         </div>
       </div>
 
-      {/* Body Section (Expanded Details) */}
       {isExpanded && hasDetails && <ResourceCardBody resource={resource} />}
 
-      {/* Footer Section (Actions) */}
       <ResourceCardFooter
         resource={resource}
         resourceTypeId={resourceTypeId}
@@ -175,7 +151,6 @@ const ResourceCard = ({ resource }) => {
         onActionClick={setConfirmAction}
       />
 
-      {/* Modals (Lazy Loaded) */}
       {confirmUrl && (
         <Suspense fallback={null}>
           <ConfirmUrlModal url={confirmUrl} onClose={() => setConfirmUrl(null)} />
