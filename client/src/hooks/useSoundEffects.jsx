@@ -6,17 +6,11 @@ import {
   setSoundEnabled,
 } from "../utils/soundUtils";
 
-// Create Sound Context
 const SoundContext = createContext(null);
 
-/**
- * Sound Effects Provider Component
- * Wraps the app to provide sound functionality
- */
 export const SoundProvider = ({ children }) => {
   const [isSoundEnabled, setIsSoundEnabled] = useState(() => getSoundEnabled());
 
-  // Toggle sound on/off
   const toggleSound = useCallback(() => {
     setIsSoundEnabled((prev) => {
       const newValue = !prev;
@@ -25,7 +19,6 @@ export const SoundProvider = ({ children }) => {
     });
   }, []);
 
-  // Play sound if enabled
   const playSound = useCallback(
     (soundType, volume = 0.3) => {
       if (isSoundEnabled) {
@@ -46,10 +39,6 @@ export const SoundProvider = ({ children }) => {
   );
 };
 
-/**
- * Custom hook to use sound effects
- * @returns {Object} - Sound context with isSoundEnabled, toggleSound, and playSound
- */
 export const useSoundEffects = () => {
   const context = useContext(SoundContext);
   if (!context) {

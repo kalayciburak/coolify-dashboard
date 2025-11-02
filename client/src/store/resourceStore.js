@@ -1,12 +1,8 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import {
-  fetchAllResources,
-  startResource,
-  stopResource,
-  deleteResource,
-} from "../api/coolify";
+import resourceRepository from "../repositories/ResourceRepository";
 import { RESOURCE_TYPES } from "../constants/resourceTypes";
+
 
 const useResourceStore = create((set, get) => ({
   applications: [],
@@ -23,7 +19,8 @@ const useResourceStore = create((set, get) => ({
     }
 
     try {
-      const allResources = await fetchAllResources();
+      // Use repository instead of direct API call
+      const allResources = await resourceRepository.fetchAll();
 
       const applications = allResources.filter(
         (r) => r.type === RESOURCE_TYPES.APPLICATION
@@ -181,7 +178,8 @@ const useResourceStore = create((set, get) => ({
     );
 
     try {
-      await startResource(type, uuid);
+      // Use repository instead of direct API call
+      await resourceRepository.start(type, uuid);
       get().startPolling(type, uuid, "running", 60, t, actionKey);
     } catch (error) {
       toast.error(
@@ -212,7 +210,8 @@ const useResourceStore = create((set, get) => ({
     );
 
     try {
-      await stopResource(type, uuid);
+      // Use repository instead of direct API call
+      await resourceRepository.stop(type, uuid);
       get().startPolling(type, uuid, "stopped", 60, t, actionKey);
     } catch (error) {
       toast.error(
@@ -242,7 +241,8 @@ const useResourceStore = create((set, get) => ({
     );
 
     try {
-      await deleteResource(type, uuid);
+      // Use repository instead of direct API call
+      await resourceRepository.delete(type, uuid);
       toast.success(
         t("admin.resourceDeleted", { type: t(`resourceTypes.${type}`) }),
         { id: actionKey }

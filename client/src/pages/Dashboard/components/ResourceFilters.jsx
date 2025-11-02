@@ -11,14 +11,6 @@ import {
   ArrowDownIcon,
 } from "@heroicons/react/24/outline";
 
-/**
- * ResourceFilters - Search, sort, and filter controls
- *
- * SOLID Principles:
- * - Single Responsibility: Only handles filtering/sorting UI
- * - Interface Segregation: Clean props interface
- * - Dependency Inversion: Uses callbacks, doesn't know about state management
- */
 const ResourceFilters = ({
   searchTerm,
   onSearchChange,

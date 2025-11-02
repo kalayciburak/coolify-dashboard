@@ -1,29 +1,6 @@
 import { useSoundEffects } from "../../hooks/useSoundEffects";
 import { SOUND_TYPES } from "../../utils/soundUtils";
 
-/**
- * Button - Reusable button component with variants
- *
- * SOLID Principles:
- * - Single Responsibility: Only handles button UI
- * - Open/Closed: New variants can be added via VARIANTS constant
- * - DRY: Eliminates duplicated button styling
- *
- * Variants:
- * - primary: Purple (default actions)
- * - secondary: Gray (neutral actions)
- * - success: Green (start, confirm)
- * - warning: Yellow (stop, caution)
- * - danger: Red (delete, destructive)
- * - info: Blue (logs, info)
- * - indigo: Indigo (links, navigation)
- *
- * Features:
- * - Sound effects on click
- * - Disabled state
- * - Icon support
- * - Size variants
- */
 
 const VARIANTS = {
   primary:

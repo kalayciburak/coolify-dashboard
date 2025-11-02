@@ -1,27 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { PlayIcon, StopIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-/**
- * useResourceActions - Action-related utilities for ResourceCard
- *
- * SOLID Principles:
- * - Single Responsibility: Only handles action UI logic (color, icon, text)
- * - Open/Closed: New action types can be added via switch cases
- * - Interface Segregation: Returns focused action utilities
- *
- * Responsibilities:
- * - Action color mapping
- * - Action icon mapping
- * - Action text translation
- * - Time formatting
- */
 const useResourceActions = (currentAction) => {
   const { t, i18n } = useTranslation();
 
-  /**
-   * Get color for current action
-   * @returns {string|null} Color name (green, yellow, red) or null
-   */
   const getActionColor = () => {
     if (!currentAction) return null;
     switch (currentAction.action) {
@@ -36,10 +18,6 @@ const useResourceActions = (currentAction) => {
     }
   };
 
-  /**
-   * Get icon component for current action
-   * @returns {Component|null} Icon component or null
-   */
   const getActionIcon = () => {
     if (!currentAction) return null;
     switch (currentAction.action) {
@@ -54,20 +32,11 @@ const useResourceActions = (currentAction) => {
     }
   };
 
-  /**
-   * Get translated action text
-   * @returns {string} Translated action text
-   */
   const getActionText = () => {
     if (!currentAction) return "";
     return t(`admin.${currentAction.action}`);
   };
 
-  /**
-   * Format elapsed time (seconds → "Xs" or "Xm Ys")
-   * @param {number} seconds - Elapsed seconds
-   * @returns {string} Formatted time string
-   */
   const formatElapsedTime = (seconds) => {
     if (seconds < 60) {
       return `${seconds}s`;

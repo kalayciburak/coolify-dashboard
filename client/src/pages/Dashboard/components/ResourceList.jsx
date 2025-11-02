@@ -4,14 +4,6 @@ import { useSoundEffects } from "../../../hooks/useSoundEffects";
 import { SOUND_TYPES } from "../../../utils/soundUtils";
 import { CubeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-/**
- * ResourceList - Resource grid with table header and empty state
- *
- * SOLID Principles:
- * - Single Responsibility: Only displays resource list
- * - Open/Closed: Column configuration can be externalized
- * - Dependency Inversion: Receives sorted resources, doesn't know how they're sorted
- */
 const ResourceList = ({
   resources,
   sortBy,
@@ -71,7 +63,7 @@ const ResourceList = ({
   const columns = [
     { key: "detail", label: t("common.detail"), sortable: false, span: 1 },
     { key: "status", label: t("common.status"), sortable: true, span: 1 },
-    { key: "name", label: t("common.name"), sortable: true, span: 3 },
+    { key: "name", label: t("common.name"), sortable: true, span: 2 },
     {
       key: "created_at",
       label: t("common.created"),
@@ -99,7 +91,7 @@ const ResourceList = ({
     <div className="bg-white/2 border border-white/10 rounded-lg overflow-hidden">
       {/* Table Header */}
       <div className="hidden lg:block bg-white/7 border-b text-center border-white/10 px-6 py-3">
-        <div className="grid grid-cols-12 gap-4 text-xs font-medium text-slate-300 uppercase tracking-wider">
+        <div className="grid grid-cols-11 gap-4 text-xs font-medium text-slate-300 uppercase tracking-wider">
           {columns.map((column) => (
             <div
               key={column.key}

@@ -1,23 +1,6 @@
 import { useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-/**
- * BaseModal - Reusable modal base component
- *
- * SOLID Principles:
- * - Single Responsibility: Only handles modal container UI/UX
- * - Open/Closed: Content passed as children
- * - Interface Segregation: Consistent modal interface
- * - DRY: Eliminates duplicated modal patterns
- *
- * Features:
- * - ESC key to close
- * - Backdrop click to close
- * - Consistent styling
- * - Accessibility (focus trap, ARIA)
- *
- * Replaces duplicated ESC key handling in multiple modals
- */
 const BaseModal = ({
   children,
   onClose,

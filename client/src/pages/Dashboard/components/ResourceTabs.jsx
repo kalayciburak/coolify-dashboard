@@ -7,14 +7,6 @@ import {
 import { useSoundEffects } from "../../../hooks/useSoundEffects";
 import { SOUND_TYPES } from "../../../utils/soundUtils";
 
-/**
- * ResourceTabs - View switcher for different resource types
- *
- * SOLID Principles:
- * - Single Responsibility: Only handles tab navigation UI
- * - Open/Closed: Tab configuration can be extracted to constant
- * - Interface Segregation: Receives only needed props
- */
 const ResourceTabs = ({
   activeView,
   onViewChange,
@@ -60,7 +52,7 @@ const ResourceTabs = ({
         <button
           key={id}
           onClick={() => handleTabClick(id)}
-          className={`px-3 md:px-6 py-1.5 rounded-lg border font-medium transition cursor-pointer flex items-center gap-1.5 md:gap-2 text-sm whitespace-nowrap touch-manipulation ${
+          className={`px-3 md:px-6 py-1.5 rounded-lg border font-medium transition cursor-pointer flex items-center gap-1 text-sm whitespace-nowrap touch-manipulation ${
             activeView === id
               ? "bg-purple-500/50 border-purple-500/50 text-purple-200"
               : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 active:bg-white/20"

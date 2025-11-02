@@ -5,22 +5,6 @@ import { useSoundEffects } from "../../hooks/useSoundEffects";
 import { SOUND_TYPES } from "../../utils/soundUtils";
 import useAutoHide from "../../hooks/useAutoHide";
 
-/**
- * SecureField - Reusable secure text field with show/hide + clipboard
- *
- * SOLID Principles:
- * - Single Responsibility: Only handles secure field display
- * - Open/Closed: Can be extended with new features via props
- * - DRY: Eliminates duplicated password/URL display logic
- *
- * Features:
- * - Show/hide toggle
- * - Clipboard copy
- * - Auto-hide after timeout
- * - Visual feedback
- *
- * Replaces duplicated code in DatabaseInfo.jsx
- */
 const SecureField = ({
   label,
   value,

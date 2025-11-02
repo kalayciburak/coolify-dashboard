@@ -10,19 +10,6 @@ import {
   ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/outline";
 
-/**
- * ResourceCardFooter - Action buttons and controls
- *
- * SOLID Principles:
- * - Single Responsibility: Only handles action button UI
- * - Interface Segregation: Clean props interface
- * - Open/Closed: New button types can be added via props
- *
- * Displays:
- * - Left: App URL, YAML viewer
- * - Right: Admin controls (start, stop, delete, logs)
- * - Action status indicator when action is in progress
- */
 const ResourceCardFooter = ({
   resource,
   resourceTypeId,
