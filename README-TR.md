@@ -268,27 +268,31 @@ Yeni QR kodunu kimlik doğrulama uygulamanızla tarayın.
 
 ### Giriş Ekranı
 
-![Giriş Ekranı](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/1.png)
+![Login Screen](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/1.png)
 
-### Uygulamalar Genel Görünüm
+### İki Faktörlü Doğrulama
 
-![Uygulamalar Genel Görünüm](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/2.png)
+![Two-Factor Authentication](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/2.png)
 
-### Uygulama Detayları
+### Uygulama Genel Bakış
 
-![Uygulama Detayları](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/3.png)
+![Application Overview](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/3.png)
+
+### Canlı Log İzleme
+
+![Real-time log monitoring with filtering](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/4.png)
+
+### Servisler Genel Bakış
+
+![Services Overview](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/5.png)
 
 ### Servis Detayları
 
-![Servis Detayları](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/4.png)
+![Services Details](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/6.png)
 
-### Veritabanı Yapılandırması
+### Veritabanı Detayları
 
-![Veritabanı Detayları](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/5.png)
-
-### Çok Dilli Destek
-
-![Çok Dilli Destek](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/tr/6.png)
+![Database Details](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/7.png)
 
 ---
 

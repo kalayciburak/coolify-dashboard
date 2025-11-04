@@ -268,27 +268,31 @@ Scan the new QR code with your authenticator app.
 
 ### Login Screen
 
-![Login Screen](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/1.png)
+![Login Screen](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/1.png)
 
-### Applications Overview
+### Two-Factor Authentication
 
-![Applications Overview](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/2.png)
+![Two-Factor Authentication](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/2.png)
 
-### Application Details
+### Application Overview
 
-![Application Details](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/3.png)
+![Application Overview](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/3.png)
+
+### Real-time log monitoring with filtering
+
+![Real-time log monitoring with filtering](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/4.png)
 
 ### Services Overview
 
-![Services Overview](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/4.png)
+![Services Overview](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/5.png)
+
+### Services Details
+
+![Services Details](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/6.png)
 
 ### Database Configuration
 
-![Database Details](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/5.png)
-
-### Multi-language Support
-
-![Language Support](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/en/6.png)
+![Database Details](https://raw.githubusercontent.com/kalayciburak/coolify-dashboard/master/docs/screenshots/7.png)
 
 ---
 
